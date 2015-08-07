@@ -7,6 +7,7 @@ var restAuth = require('./routes/rest/restUserAuth');
 var restConfigure = require('./routes/rest/restConfigure');
 var restVoiceCommand = require('./routes/rest/restVoiceCommand');
 var ctrlThings = require('./controllers/CtrlThings');
+var ctrlNeuro = require('./controllers/CtrlNeuro');
 var ExpressConfigure = require('./config/ExpressConfig');
 var mongoose = require('mongoose');
 var mongooseConfig = require('./config/MongoConfig');
@@ -24,6 +25,10 @@ ctrlThings.initCylon(cylon, {
     host: '0.0.0.0',
     port: '9001'
 });
+
+ctrlNeuro.initNeuro({port: '9002'});
+
+
 
 app.listen(app.get('port'));
 
