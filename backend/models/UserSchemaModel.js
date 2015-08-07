@@ -6,5 +6,6 @@ module.exports = mongoose.model('User', new Schema({
     name: String,
     password: String,
     authDate: Date,
-    things: Schema.Types.Mixed
+    things: Schema.Types.Mixed,
+    commands: Schema.Types.Mixed
 }));

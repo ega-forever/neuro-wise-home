@@ -5,6 +5,8 @@ var User = require('../models/UserSchemaModel');
 var jwt = require('jsonwebtoken');
 var Q = require('q');
 
+var getThings = [];
+
 var Cylon = null;
 var initCylon = function (c, host) {
     Cylon = c;
@@ -41,6 +43,8 @@ var ioThings = function (user) {
             user.things[s].io = "http://127.0.0.1:9001/api/robots/" + user.things[s].token.toLowerCase();
             temp.push(user.things[s]);
         }
+        console.log('super');
+        getThings = temp;
         deferred.resolve(temp);
 
         return deferred.promise;
@@ -52,3 +56,4 @@ var ioThings = function (user) {
 
 module.exports.initCylon = initCylon;
 module.exports.ioThings = ioThings;
+module.exports.getThings = function(){return getThings};

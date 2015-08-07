@@ -7,7 +7,6 @@ angular.module('RrAppThingsVoiceCtrl', [])
         var recognition = new webkitSpeechRecognition();
         recognition.lang = "en-US";
 
-
         self.record = function () {
             self.isRecording = !self.isRecording;
             if (self.isRecording) {
