@@ -1,0 +1,67 @@
+doctype html
+html(lang='en', ng-app="RrApp")
+    head
+        meta(http-equiv='content-type', content='text/html; charset=UTF-8')
+        meta(charset='utf-8')
+        title Boot
+        meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+        link(href='css/bootstrap.min.css', rel='stylesheet')
+        link(href='css/styles.css', rel='stylesheet')
+    body
+        .navbar.navbar-default.navbar-fixed-top(ng-controller="MenuCtrl")
+            .col-md-12
+                .navbar-header
+                    a.navbar-brand(href='#') RedRow
+                #navbar-collapse2.collapse.navbar-collapse
+                    ul.nav.navbar-nav.navbar-right
+                        li.active
+                            a(href='#') Main
+                        li
+                            a(href='#configure') Configure
+                        li
+                            a(data-target='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Things
+                                span.caret
+                            ul.dropdown-menu
+                                li
+                                    a(href="#things") Control
+                                li
+                                    a(data-toggle='modal', data-target='.thingModal.add') Add thing
+                                li
+                                    a(data-toggle='modal', data-target='.thingModal.remove') Remove thing
+                                li
+                                    a(data-toggle='modal', data-target='.thingModal.voice') Voice control
+
+
+                        li(ng-hide="isAuth")
+                            a(type='button', data-toggle='modal', data-target='.authModal') LogIn
+                        li(ng-show="isAuth")
+                            a(type='button', data-toggle='modal', data-target='.authModal') {{ username}}
+
+        ng-view
+
+        include views/authorize/authorize.jade
+        include views/things/addThing.jade
+        include views/things/removeThing.jade
+        include views/things/voice.jade
+
+        script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js')
+        script(src='js/bootstrap/bootstrap.min.js')
+        script(src='//cdn.webrtc-experiment.com/Translator.js')
+        script(src='js/angular/angular.js')
+        script(src='js/angular/angular-route.js')
+        script(src="https://cdn.socket.io/socket.io-1.2.0.js")
+        script(src="https://cdn.jsdelivr.net/ngstorage/0.3.6/ngStorage.min.js")
+        script(src="js/App/config/RrAppConfig.js")
+        script(src="js/App/controllers/RrAppConfigureCtrl.js")
+        script(src="js/App/controllers/RrAppMenuCtrl.js")
+        script(src="js/App/controllers/RrAppLoginCtrl.js")
+        script(src="js/App/controllers/RrAppMainCtrl.js")
+        script(src="js/App/controllers/RrAppThingsCtrl.js")
+        script(src="js/App/controllers/RrAppThingsAddCtrl.js")
+        script(src="js/App/controllers/RrAppThingsRemoveCtrl.js")
+        script(src="js/App/services/RrAppFetchService.js")
+        script(src="js/App/services/RrAppUpdateProfileService.js")
+        script(src="js/App/controllers/ThingsData/events.js")
+        script(src="js/App/controllers/RrAppThingsVoiceCtrl.js")
+        script(src="js/RrApp.js")
+

@@ -1,0 +1,13 @@
+.modal.fade.thingModal.add(tabindex="-1", role="dialog", ng-controller="thingsAddCtrl")
+    .modal-dialog
+        .modal-content
+            .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true', ng-click = "back('/things')") x
+                h4.modal-title Add thing
+            .modal-body
+                .input-group(ng-repeat="thing in connectedThings")
+                    input(type="radio", name="thing", ng-model="$parent.chosenThing", value="{{$index}}")
+                    | &nbsp port: {{thing.comName}}, manufacture: {{thing.manufacturer}}
+            .modal-footer
+                button.btn.btn-primary(type='button', ng-click="add('/things')", data-dismiss='modal') Add

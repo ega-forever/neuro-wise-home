@@ -1,0 +1,25 @@
+{
+  "name": "mindwave",
+  "version": "1.0.0",
+  "main": "neuro.js",
+  "dependencies": {
+    "brain": "^0.7.0",
+    "cylon-api-http": "^0.3.0",
+    "cylon": "^1.1.0",
+    "cylon-neurosky": "^0.12.0",
+    "node-mind": "^0.1.1",
+    "lodash": "^3.10.0",
+    "natural": "^0.2.1",
+    "node-pos": "^0.0.4",
+    "WNdb": "^3.1.1",
+    "node-thinkgear": "^0.0.1",
+    "synaptic": "^1.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

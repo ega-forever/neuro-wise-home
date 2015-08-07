@@ -1,0 +1,27 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.13.2",
+    "cors": "^2.7.1",
+    "cylon-api-socketio": "^0.3.0",
+    "cylon": "^1.1.0",
+    "express": "^4.13.1",
+    "jsonwebtoken": "^5.0.4",
+    "lodash": "^3.10.0",
+    "q": "^1.4.1",
+    "mongoose": "^4.0.7",
+    "serialport": "^1.7.4",
+    "express-jwt": "^3.0.1",
+    "express-session": "^1.11.3",
+    "promise": "^7.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

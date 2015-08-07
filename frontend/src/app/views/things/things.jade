@@ -1,0 +1,42 @@
+.col-md-4.col-sm-6(ng-repeat="thing in things")
+    .well
+    .panel.panel-default(ng-if="thing.thingType == 'led'")
+        .panel-heading
+            a.pull-right(href='#')
+                button.btn.btn-default
+                    span.glyphicon.glyphicon-align-left
+            h4 {{thing.info.name}}
+        .panel-body
+            .col-sm-6
+                p
+                    strong
+                    | Operate
+
+            .col-sm-6
+                .btn-group(role="group")
+                    button.btn.btn-default(type="button", ng-click="thing.toggleIo()", ng-class="{'btn-primary': thing.info.toggleState}", ng-disabled="thing.disabled") On
+                    button.btn.btn-default(type="button", ng-click="thing.toggleIo()" ng-class="{'btn-primary': !thing.info.toggleState}", ng-disabled="thing.disabled") Off
+
+            .clearfix
+            hr
+            | Lamp info: {{thing.info.info}}
+
+
+    .panel.panel-default(ng-if="thing.thingType == 'demo'")
+        .panel-heading
+            a.pull-right(href='#')
+                button.btn.btn-default
+                    span.glyphicon.glyphicon-align-left
+            h4 {{thing.info.name}}
+        .panel-body
+            .col-sm-6
+                p
+                    strong
+                    | Operate
+
+            .col-sm-6
+                .btn-group(role="group")
+                    button.btn.btn-default(type="button", ng-click="thing.toggleIo()", ng-class="{'btn-primary': thing.info.toggleState}", ng-disabled="thing.disabled") Touch!
+            .clearfix
+            hr
+            | Lamp info: {{thing.info.info}}
