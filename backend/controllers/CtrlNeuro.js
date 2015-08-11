@@ -11,9 +11,16 @@ var userAuth = null;
 
 tgClient.on('data', function (data) {
 
-    if (data.eSense)
+    if (data.eSense) { //remove in prod version
         console.log(data.eSense);
+    }
 
+
+        if (data.eSense && userAuth.id != null) {
+            io.of('/neuro').emit('payload', {
+            data: data.eSense
+        });
+    }
 
     if (data.eSense.attention > 50 && data.eSense.meditation > 50 && data.eegPower.delta < 15000 && userAuth.id != null)
         io.of('/neuro').emit('trigger', {
@@ -50,7 +57,7 @@ var init = function (data) {
 
 
 
-    //tgClient.connect();
+    tgClient.connect();
 }
 
 
