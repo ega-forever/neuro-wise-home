@@ -1,0 +1,11 @@
+.modal.fade.configureModal.addRemove(tabindex="-1", role="dialog", ng-controller="configureManageCtrl")
+    .modal-dialog
+        .modal-content
+            .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true', ng-click = "back('/things')") x
+                h4.modal-title Manage command
+            .modal-body
+
+            .modal-footer
+                button.btn.btn-primary(type='button', ng-click="add('/things')", data-dismiss='modal') Add

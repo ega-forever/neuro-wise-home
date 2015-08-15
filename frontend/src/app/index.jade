@@ -43,6 +43,7 @@ html(lang='en', ng-app="RrApp")
         include views/things/addThing.jade
         include views/things/removeThing.jade
         include views/things/voice.jade
+        include views/configure/manageCommand.jade
 
         script(src='//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js')
         script(src='js/bootstrap/bootstrap.min.js')
@@ -63,5 +64,6 @@ html(lang='en', ng-app="RrApp")
         script(src="js/App/services/RrAppNeuroService.js")
         script(src="js/App/controllers/ThingsData/events.js")
         script(src="js/App/controllers/RrAppThingsVoiceCtrl.js")
+        script(src="js/App/controllers/RrAppConfigureManageCtrl.js")
         script(src="js/RrApp.js")
 

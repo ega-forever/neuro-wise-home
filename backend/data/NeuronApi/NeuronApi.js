@@ -1,57 +1,136 @@
 var _ = require('lodash');
-//var pos = require('node-pos').partsOfSpeech;
 var natural = require('natural');
-var classifier = new natural.BayesClassifier();
+var neuron = require('../../models/NeuronSchemaModel');
+var q = require('q');
 
 
-
-var setCommand = function(phrase, command, classifier){
-
-    var tokenizer = new natural.WordTokenizer();
-    var toRecognize = [];
+var setCommand = function (phrase, command, thing) {
 
 
-    tokenizer.tokenize(phrase).forEach(function (w) {
-        toRecognize.push(natural.PorterStemmer.stem(w));
+    var deferred = q.defer();
+
+    neuron.findOneAndUpdate(
+        {_point: thing},
+        {"$setOnInsert": {point: thing}},
+        {new: true, upsert: true}
+    ).exec().then(function (th) {
+
+            console.log('step0');
+            th.classifier = natural.BayesClassifier.restore(JSON.parse(th.classifier));
+
+            var tokenizer = new natural.WordTokenizer();
+            var toRecognize = [];
+            var saveDoc = function (err, res) {
+
+                console.log("res");
+                //console.log(res);
+                var returnFromCallable = typeof res.classifier.getClassifications == 'function';
+                console.log(returnFromCallable);
+                if (err) {
+                    deferred.resolve(null);
+                }
+
+                res.classifier = JSON.stringify(th.classifier);
+                res.save(function (e) {
+                    if (e) {
+                        deferred.resolve(null);
+                    }
+                    deferred.resolve(th);
+                });
+
+            };
+
+
+            tokenizer.tokenize(phrase).forEach(function (w) {
+                toRecognize.push(natural.PorterStemmer.stem(w));
+            });
+
+
+            if (th.classifier != null && _.result(_.find(th.classifier.docs, {label: thing + " - " + command}), 'label') == null) {
+                console.log('new');
+                th.classifier.events.on('trainedWithDocument', function (obj) {
+                    console.log(obj);
+                    neuron.findOne({_id: th._id}, saveDoc);
+                });
+                th.classifier.addDocument(toRecognize.join(' '), thing + " - " + command);
+                th.classifier.train();
+            } else {
+                console.log('not new');
+                neuron.findOne({_id: th._id}, saveDoc);
+            }
+
+            //  var cl = th.classifier.getClassifications(phrase);
+            //  console.log("cl: " + cl)
+
+            return th;
+        });
+
+    return deferred.promise;
+}
+
+var getCommand = function (phrase) {
+
+    var lastDeffered = q.defer();
+
+    neuron.findOne(
+        {"point": {"$in": _.words(phrase)}}
+    ).exec().then(function (result) {
+            if (result == null) {
+                lastDeffered.resolve(null);
+            }
+            if (result != null && result.classifier != null) {
+                console.log(result.classifier.docs);
+
+                result.classifier = natural.BayesClassifier.restore(JSON.parse(result.classifier));
+
+
+                console.log(result.classifier.classify(phrase));
+                console.log("step1");
+
+                var returnFromCallable = typeof result.classifier.getClassifications == 'function';
+                console.log(returnFromCallable);
+
+
+                var cl = result.classifier.getClassifications(phrase);
+                console.log("cl: " + cl)
+                var b = false;
+                if (cl.length == 1)
+                    b = true;
+                for (var n = 1; n < cl.length; cl++) {
+                    if (cl[n - 1].value != cl[n].value) {
+                        b = true;
+                        n = cl.length - 1;
+                    }
+                }
+
+
+                var s = b ? result.classifier.classify(phrase) : null;
+                console.log(s);
+
+                lastDeffered.resolve(s);
+
+            }
+        }, function (err) {
+            lastDeffered.resolve(null);
+        });
+
+    return lastDeffered.promise;
+
+}
+
+
+setCommand("led on", 'toggle', 'led').then(function () {
+    console.log('step2');
+    getCommand("turn on led").then(function (action) {
+        console.log("action:" + action);
     });
+});
 
 
-    console.log(toRecognize.join(' '));
-
-    classifier.addDocument(toRecognize.join(' '), command);
-    classifier.train();
-
-}
-
-var getCommand = function(phrase){
-
-    var cl = classifier.getClassifications(phrase);
-    console.log(cl);
-    var b = false;
-    if(cl.length == 1)
-        b = true;
-
-    for (var n = 1; n < cl.length; cl++) {
-        if (cl[n - 1].value != cl[n].value) {
-            b = true;
-            n = cl.length - 1;
-        }
-    }
-
-    return b ? classifier.classify(phrase) : null;
-}
+//setCommand("turn on led",'toggle', 'led');
+//setCommand("led off", 'toggle','led');
+//setCommand("turn off led",'toggle', 'led');
 
 
-
-setCommand("led on", 'led - toggle', classifier);
-setCommand("turn on led",'led - toggle', classifier);
-setCommand("led off", 'led - toggle', classifier);
-setCommand("turn off led",'led - toggle', classifier);
-
-console.log("command: " + getCommand("door open").thing);
-
-
-
-module.exports.classifier = classifier;
 module.exports.setCommand = setCommand;
 module.exports.getCommand = getCommand;

@@ -3,27 +3,29 @@ var neuronApi = require('../data/NeuronApi/NeuronApi');
 var ctrlThings = require('./CtrlThings');
 var executeVoiceCommand = function (user, data, token) {
 
+
     return function () {
         var deferred = Q.defer();
 
-        if (user.id == null) {
+        if (user == null || user.id == null) {
             deferred.resolve([]);
             return deferred.promise;
         }
 
-        neuronApi.classifier = user.commands == null ? neuronApi.classifier : user.commands;
+        //neuronApi.classifier = user.commands == null ? neuronApi.classifier : user.commands;
 
        // console.log("command: " + data);
 
-        var thingOb = neuronApi.getCommand(data);
+         neuronApi.getCommand(data).then(function(data) {
 
-        console.log('label');
 
-        console.log(ctrlThings.getThings());
-        ctrlThings.getThings().map(function(t){
-                var m = thingOb.split('-');
-            console.log('!!!');
-                if(t.trigger == m[0].trim()) {
+            console.log('label: ' + data);
+
+            console.log(ctrlThings.getThings());
+            ctrlThings.getThings().map(function (t) {
+                var m = data.split('-');
+                console.log('!!!');
+                if (t.trigger == m[0].trim()) {
                     console.log('inside');
                     console.log(t.controller[m[1].trim()]);
                     t.controller[m[1].trim()]({token: token});
@@ -31,8 +33,8 @@ var executeVoiceCommand = function (user, data, token) {
             });
 
 
-        deferred.resolve();
-
+            deferred.resolve();
+        });
         return deferred.promise;
 
 

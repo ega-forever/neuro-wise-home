@@ -34,6 +34,12 @@ app.listen(app.get('port'));
 
 
 //demo purpose
+
+var neuronModel = require('./models/NeuronSchemaModel');
+neuronModel.remove({}, function(err) {
+    console.log('collection removed')
+});
+
 /*
 var userModel = require('./models/UserSchemaModel');
 userModel.remove({}, function(err) {
