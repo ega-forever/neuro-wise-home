@@ -118,19 +118,54 @@ var getCommand = function (phrase) {
 
 }
 
+var getCommandsList = function(){
 
-setCommand("led on", 'toggle', 'led').then(function () {
+    var deffered = q.defer();
+    neuron.find({point: {$ne: null}}).exec().then(function(data){
+        console.log(data);
+        deffered.resolve(data);
+    }, function(err){
+       if(err){
+           deffered.resolve([]);
+       }
+    });
+
+return deffered.promise;
+}
+
+var modifyCommand = function(command){
+    console.log('step1');
+    var deferred = q.defer();
+    neuron.findOne({_id: command._id}).exec().then(function(data){
+        console.log('step2');
+        data.classifier = command.classifier;
+        data.save(function(err){
+            console.log('step3');
+            if(err){
+                deferred.resolve('err');
+            }else{
+                deferred.resolve('ok');
+            }
+        });
+    }, function(err){
+        if(err){
+            deferred.resolve('err');
+        }
+    });
+
+    return deferred.promise;
+}
+/*
+setCommand("super led", 'toggle', 'led').then(function () {
     console.log('step2');
     getCommand("turn on led").then(function (action) {
         console.log("action:" + action);
     });
 });
-
-
-//setCommand("turn on led",'toggle', 'led');
-//setCommand("led off", 'toggle','led');
-//setCommand("turn off led",'toggle', 'led');
+*/
 
 
 module.exports.setCommand = setCommand;
 module.exports.getCommand = getCommand;
+module.exports.modifyCommand = modifyCommand;
+module.exports.getCommandsList = getCommandsList;

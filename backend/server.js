@@ -6,6 +6,7 @@ var restThings = require('./routes/rest/restThings');
 var restAuth = require('./routes/rest/restUserAuth');
 var restConfigure = require('./routes/rest/restConfigure');
 var restVoiceCommand = require('./routes/rest/restVoiceCommand');
+var restCommands = require('./routes/rest/restCommands');
 var ctrlThings = require('./controllers/CtrlThings');
 var ctrlNeuro = require('./controllers/CtrlNeuro');
 var ExpressConfigure = require('./config/ExpressConfig');
@@ -17,7 +18,7 @@ var app = express();
 
 mongoose.connect(mongooseConfig.database);
 
-ExpressConfigure.configure(app, restThings, restAuth, restVoiceCommand);
+ExpressConfigure.configure(app, restThings, restAuth, restVoiceCommand, restCommands);
 serialTest.fetchList();
 
 
@@ -34,12 +35,12 @@ app.listen(app.get('port'));
 
 
 //demo purpose
-
+/*
 var neuronModel = require('./models/NeuronSchemaModel');
 neuronModel.remove({}, function(err) {
     console.log('collection removed')
 });
-
+*/
 /*
 var userModel = require('./models/UserSchemaModel');
 userModel.remove({}, function(err) {

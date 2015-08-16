@@ -7,5 +7,22 @@
                 h4.modal-title Manage command
             .modal-body
 
+                .col-lg-6(ng-repeat="command in commands track by $index")
+                    .docs(ng-repeat="doc in command.classifier.docs track by $indexe")
+                        .input-group
+
+                            span.input-group-btn
+                                button.btn.btn-default {{doc.label}}
+                            input.form-control(type='text', aria-label='...',  ng-model="doc.text")
+                            .input-group-btn
+                                button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                    | Action
+                                    span.caret
+                                ul.dropdown-menu.dropdown-menu-right
+                                    li
+                                        a(ng-click="modify(command)") Modify
+                                    li
+                                        a(ng-click='remove(command)') Remove
+
             .modal-footer
-                button.btn.btn-primary(type='button', ng-click="add('/things')", data-dismiss='modal') Add
+                button.btn.btn-primary(type='button', ng-click="add('/things')", data-dismiss='modal') Save

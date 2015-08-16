@@ -1,7 +1,7 @@
 var bodyParser   = require('body-parser');
 var cors = require('cors');
 
-var config = function (app,  restThings, restAuth, restVoiceCommand) {
+var config = function (app,  restThings, restAuth, restVoiceCommand, restCommands) {
 //in case back and front are not on same port
     app.all('*', function (req, res, next) {
         // add details of what is allowed in HTTP request headers to the response headers
@@ -28,6 +28,8 @@ var config = function (app,  restThings, restAuth, restVoiceCommand) {
     app.post('/rest-things-add', restThings.add);
     app.post('/rest-things-remove', restThings.remove);
     app.post('/rest-voice-control', restVoiceCommand.execute);
+    app.post('/rest-commands', restCommands.getCommands);
+    app.post('/rest-command-modify', restCommands.modifyCommand);
 
     app.post('/authenticate', restAuth.auth);
 

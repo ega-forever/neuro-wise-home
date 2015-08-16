@@ -17,6 +17,13 @@ angular.module('RrAppFetchService', [])
                     .success(function(data){
                         return data;
                     });
+            },
+            getCommands: function () {
+
+                return $http.post('http://localhost:9000/rest-commands', {token: $localStorage.token})
+                    .success(function(data){
+                        return data;
+                    });
             }
         };
 
