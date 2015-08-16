@@ -12,7 +12,7 @@ angular.module('RrAppConfigureManageCtrl', [])
                 a.classifier.docs.map(function (d) {
                     console.log(d);
                     if (d.text.join) {
-                        d.text = d.text.join(' ');
+                        d.text = d.text.join(' ').replace(a.point,'').trim();
                     }
 
                 })
@@ -27,6 +27,7 @@ angular.module('RrAppConfigureManageCtrl', [])
             console.log(command);
             command.classifier.docs.map(function(d){
                 d.text = d.text.split(' ');
+                d.text.push(command.point);
             });
             command.classifier = JSON.stringify(command.classifier);
             $http.post('http://localhost:9000/rest-command-modify', {//todo implement
@@ -35,9 +36,8 @@ angular.module('RrAppConfigureManageCtrl', [])
             })
                 .success(function (message) {
                     alert(message);
-                    //location.reload();
-
-                    //self.$apply();
+                    $location.path('/things');
+                    location.reload();
                 });
 
         };

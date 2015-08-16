@@ -18,10 +18,12 @@ var executeVoiceCommand = function (user, data, token) {
 
          neuronApi.getCommand(data).then(function(data) {
 
+             if(data == null){
+                 deferred.resolve([]);
+             }
 
             console.log('label: ' + data);
 
-            console.log(ctrlThings.getThings());
             ctrlThings.getThings().map(function (t) {
                 var m = data.split('-');
                 console.log('!!!');
