@@ -16,21 +16,17 @@ var setCommand = function (phrase, command, thing) {
     ).exec().then(function (th) {
 
             console.log('step0');
-            th.classifier = natural.BayesClassifier.restore(JSON.parse(th.classifier));
 
             var tokenizer = new natural.WordTokenizer();
             var toRecognize = [];
             var saveDoc = function (err, res) {
 
-                console.log("res");
-                //console.log(res);
-                var returnFromCallable = typeof res.classifier.getClassifications == 'function';
-                console.log(returnFromCallable);
+
                 if (err) {
                     deferred.resolve(null);
                 }
 
-                res.classifier = JSON.stringify(th.classifier);
+                res.classifier = th.classifier;
                 res.save(function (e) {
                     if (e) {
                         deferred.resolve(null);
@@ -46,21 +42,16 @@ var setCommand = function (phrase, command, thing) {
             });
 
 
-            if (th.classifier != null && _.result(_.find(th.classifier.docs, {label: thing + " - " + command}), 'label') == null) {
-                console.log('new');
-                th.classifier.events.on('trainedWithDocument', function (obj) {
-                    console.log(obj);
-                    neuron.findOne({_id: th._id}, saveDoc);
-                });
-                th.classifier.addDocument(toRecognize.join(' '), thing + " - " + command);
-                th.classifier.train();
-            } else {
-                console.log('not new');
-                neuron.findOne({_id: th._id}, saveDoc);
-            }
+            if (_.result(_.find(th.classifier, {action: thing + " - " + command}), 'action') == null) {
 
-            //  var cl = th.classifier.getClassifications(phrase);
-            //  console.log("cl: " + cl)
+                console.log('new');
+
+                th.classifier.push({pattern: toRecognize.join(' '), action: thing + " - " + command});
+                neuron.findOne({_id: th._id}, saveDoc);
+
+            } else {
+                deferred.resolve(null);
+            }
 
             return th;
         });
@@ -78,20 +69,22 @@ var getCommand = function (phrase) {
             if (result == null) {
                 lastDeffered.resolve(null);
             }
-            if (result != null && result.classifier != null) {
-                console.log(result.classifier.docs);
+            //console.log('step2');
+            console.log(result.classifier);
 
-                result.classifier = natural.BayesClassifier.restore(JSON.parse(result.classifier));
-
-
-                console.log(result.classifier.classify(phrase));
-                console.log("step1");
-
-                var returnFromCallable = typeof result.classifier.getClassifications == 'function';
-                console.log(returnFromCallable);
+            //result.classifier = natural.BayesClassifier.restore(JSON.parse(result.classifier));
+            var classifierModel = new natural.BayesClassifier();
+            result.classifier.forEach(function (item) {
+                console.log("item: " + item.pattern);
+                classifierModel.addDocument(item.pattern, item.action);
+            });
 
 
-                var cl = result.classifier.getClassifications(phrase);
+
+            classifierModel.train();
+           // classifierModel.on('trainedWithDocument', function (obj) {
+             //   console.log(obj);
+                var cl = classifierModel.getClassifications(phrase);
                 console.log("cl: " + cl)
                 var b = false;
                 if (cl.length == 1)
@@ -104,12 +97,10 @@ var getCommand = function (phrase) {
                 }
 
 
-                var s = b ? result.classifier.classify(phrase) : null;
+                var s = b ? classifierModel.classify(phrase) : null;
                 console.log(s);
-
                 lastDeffered.resolve(s);
 
-            }
         }, function (err) {
             lastDeffered.resolve(null);
         });
@@ -118,51 +109,50 @@ var getCommand = function (phrase) {
 
 }
 
-var getCommandsList = function(){
+var getCommandsList = function () {
 
     var deffered = q.defer();
-    neuron.find({point: {$ne: null}}).exec().then(function(data){
+    neuron.find({point: {$ne: null}}).exec().then(function (data) {
         console.log(data);
         deffered.resolve(data);
-    }, function(err){
-       if(err){
-           deffered.resolve([]);
-       }
+    }, function (err) {
+        if (err) {
+            deffered.resolve([]);
+        }
     });
 
-return deffered.promise;
+    return deffered.promise;
 }
 
-var modifyCommand = function(command){
+var modifyCommand = function (command) {
     console.log('step1');
     var deferred = q.defer();
-    neuron.findOne({_id: command._id}).exec().then(function(data){
+    neuron.findOne({_id: command._id}).exec().then(function (data) {
         console.log('step2');
         data.classifier = command.classifier;
-        data.save(function(err){
+        data.save(function (err) {
             console.log('step3');
-            if(err){
+            if (err) {
                 deferred.resolve('err');
-            }else{
+            } else {
                 deferred.resolve('ok');
             }
         });
-    }, function(err){
-        if(err){
+    }, function (err) {
+        if (err) {
             deferred.resolve('err');
         }
     });
 
     return deferred.promise;
 }
-/*
+
 setCommand("super led", 'toggle', 'led').then(function () {
     console.log('step2');
-    getCommand("turn on led").then(function (action) {
-        console.log("action:" + action);
-    });
+      getCommand("turn on led").then(function (action) {
+         console.log("action:" + action);
+     });
 });
-*/
 
 
 module.exports.setCommand = setCommand;

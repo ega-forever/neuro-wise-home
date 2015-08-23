@@ -11,7 +11,12 @@ var fetch = function (req, res) {
         CtrlThings.ioThings(user).then(function (d) {
             var newData = [];
             for (var i = 0; i < d.length; i++)
-                newData.push({"io": d[i].io, "thingType": d[i].controller.thingType, "id": d[i].controller.info.id});
+                newData.push({
+                    "io": d[i].io,
+                    "thingType": d[i].controller.thingType,
+                    "id": d[i].controller.info.id,
+                    "controller": d[i].controller
+                });
 
             res.send(JSON.stringify(newData));
         })
