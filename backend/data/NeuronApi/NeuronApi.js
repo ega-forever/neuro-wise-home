@@ -147,12 +147,13 @@ var modifyCommand = function (command) {
     return deferred.promise;
 }
 
-setCommand("super led", 'toggle', 'led').then(function () {
-    console.log('step2');
-      getCommand("turn on led").then(function (action) {
-         console.log("action:" + action);
-     });
-});
+//todo thing could be inited in configure interface only after add command
+//setCommand("mega demo", 'toggle', 'demo').then(function () {
+//    console.log('step2');
+//      getCommand("turn on led").then(function (action) {
+  //       console.log("action:" + action);
+  //   });
+//});
 
 
 module.exports.setCommand = setCommand;

@@ -12,9 +12,6 @@ var executeVoiceCommand = function (user, data, token) {
             return deferred.promise;
         }
 
-        //neuronApi.classifier = user.commands == null ? neuronApi.classifier : user.commands;
-
-       // console.log("command: " + data);
 
          neuronApi.getCommand(data).then(function(data) {
 
@@ -26,10 +23,9 @@ var executeVoiceCommand = function (user, data, token) {
 
             ctrlThings.getThings().map(function (t) {
                 var m = data.split('-');
-                console.log('!!!');
                 if (t.trigger == m[0].trim()) {
                     console.log('inside');
-                    console.log(t.controller[m[1].trim()]);
+                    console.log(m[1].trim());
                     t.controller[m[1].trim()]({token: token});
                 }
             });
@@ -42,9 +38,6 @@ var executeVoiceCommand = function (user, data, token) {
 
     }();
 }
-
-
-
 
 
 module.exports.executeVoiceCommand = executeVoiceCommand;

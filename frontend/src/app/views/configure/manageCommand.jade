@@ -8,12 +8,18 @@
             .modal-body
 
                 .col-lg-6(ng-repeat="command in commands track by $index")
-                    .docs(ng-repeat="doc in command.classifier.docs track by $indexe")
+                    .docs(ng-repeat="doc in command.classifier")
                         .input-group
-
                             span.input-group-btn
-                                button.btn.btn-default {{doc.label}}
-                            input.form-control(type='text', aria-label='...',  ng-model="doc.text")
+                                button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                    | {{  doc.action || 'Command'}}
+                                    span.caret
+
+                                ul.dropdown-menu.dropdown-menu-right
+                                    li(ng-repeat="item in availableCommands[$parent.$index] track by $index")
+                                        a(ng-click="setComAction($parent.$parent.$index, $parent.$index, item)") {{item}}
+
+                            input.form-control(type='text', aria-label='...',  ng-model="doc.pattern")
                             .input-group-btn
                                 button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                                     | Action

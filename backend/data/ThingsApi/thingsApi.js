@@ -25,13 +25,14 @@ var thingsLogic = function (proto, infoProto) {
                 },
                 toggle: function (data) {
 
-                    console.log('led');
+                    console.log('led toggle');
 
                     if (data.token == null)
                         return;
 
                     var userDecoded = jwt.decode(data.token, AuthConfig.config.secret);
 
+                    console.log("validation");
                     if (infoProto.toggleState) {
                         infoProto.toggleState = false;
                         this.emit('turned_off', {data: infoProto.name + ' turned off'});
@@ -59,6 +60,7 @@ var thingsLogic = function (proto, infoProto) {
 
                 },
                 grid: function () {
+                    console.log("grid for led");
                     this.emit("grid", infoProto)
                 },
 

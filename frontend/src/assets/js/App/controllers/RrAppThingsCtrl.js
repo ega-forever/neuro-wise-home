@@ -1,3 +1,4 @@
+var m = [];
 angular.module('RrAppThingsCtrl', [])
     .controller('thingsCtrl', function ($scope, $http, fetchService, $localStorage,
                                         updateProfileService, thingsData, $route, thingsEvents) {
@@ -9,6 +10,7 @@ angular.module('RrAppThingsCtrl', [])
         self.things = thingsData.data.map(function(thing){
             //for (var i = 0; i < thingsData.data.length; i++) {
                 console.log(thing);
+            m.push(thing);
                 thing.io = io(thing.io);
                 thing.io.on('message', function (payload) {
                     console.log('  Event:', payload.event);
