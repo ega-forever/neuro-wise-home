@@ -13,46 +13,43 @@ angular.module('RrAppConfigureManageCtrl', [])
         }
 
         fetchService.getCommands().then(function (data) {
-            console.log(data.data[0].classifier);
-            data.data.map(function (a) {
+            console.log(data.data);
+            //data.data.forEach(function (a) {
 
-                fetchService.getThings().then(function (c) {
-                    console.log(c.data);
-                    //console.log(c.data[0].controller.commands);
-                    c.data.forEach(function (s) {
-                        s.controller.commands = _.map(s.controller.commands, function (n) {
-                            return s.thingType + " - " + n;
-                        });
-                        console.log(s.controller.commands);
-                        self.availableCommands.push(s.controller.commands);
-                    })
-                });
+            fetchService.getThings().then(function (c) {
+                console.log(c.data);
+                //console.log(c.data[0].controller.commands);
+                c.data.forEach(function (s) {
+                    s.controller.commands = _.map(s.controller.commands, function (n) {
+                        return s.thingType + " - " + n;
+                    });
+                    console.log(s.controller.commands);
+                    self.availableCommands.push(s.controller.commands);
+                })
             });
+//            });
             //data.data.push({classifier: {docs: [{label: 'omega', text: 'super'}]}});//todo for tests
             //self.availableCommands.push(_.pluck(data.data[1].classifier.docs, 'label'));//todo for tests
-console.log(data.data);
+            console.log(data.data);
             self.commands = data.data;
         });
 
 
         self.modify = function (command) {
-            console.log(command);
-           /* command.classifier.map(function (d) {
-                d.pattern = d.pattern.split(' ');
-                d.pattern.push(command.point);
+
+            command.classifier.map(function(i){
+               return i.isNew ?  delete i.isNew : i;
             });
-            console.log(command);*/
 
-
-                        $http.post('http://localhost:9000/rest-command-modify', {//todo implement
-                            command: command,
-                            token: $localStorage.token
-                        })
-                            .success(function (message) {
-                                alert(message);
-                                $location.path('/things');
-                                location.reload();
-                            });
+            $http.post('http://localhost:9000/rest-command-modify', {
+                command: command,
+                token: $localStorage.token
+            })
+                .success(function (message) {
+                    alert(message);
+                    $location.path('/things');
+                    location.reload();
+                });
 
         };
 
@@ -69,6 +66,17 @@ console.log(data.data);
                     self.$apply();
                 });
 
+        };
+
+        self.addToStack = function (command, point) {
+            _.pull(self.commands, command);
+            self.commands.map(function(i){
+                return i.point == point ? i.classifier.push(command) : i;
+            });
+        };
+
+        self.removeFromStack = function (command, doc) {
+            return _.pull(command, doc);
         };
 
 
