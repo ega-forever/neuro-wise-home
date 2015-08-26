@@ -9,7 +9,7 @@ angular.module('RrAppMenuCtrl', ['ngStorage'])
 
         neuro.on('trigger', function(data){
             console.log(data);
-           // $('.thingModal.voice').modal('show');
+            $('.thingModal.voice').modal('show');//todo open + start listener
         });
 
         $scope.isAuth = $localStorage.token != null && $localStorage.username != null ? true : false;

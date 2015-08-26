@@ -12,14 +12,15 @@ angular.module('RrAppThingsVoiceCtrl', [])
             if (self.isRecording) {
                 recognition.onresult = function (event) {
 
-                    console.log(event.results[0][0].transcript)
+                    console.log(event.results[0][0].transcript.toLowerCase())
 
                     $http.post('http://localhost:9000/rest-voice-control', {
-                        command: event.results[0][0].transcript,
+                        command: event.results[0][0].transcript.toLowerCase(),
                         token: $localStorage.token
                     })
                         .success(function (message) {
-                            alert(message);
+                            //alert(message);
+                            $('.thingModal.voice').modal('hide');
                         });
 
 
@@ -37,18 +38,14 @@ angular.module('RrAppThingsVoiceCtrl', [])
 
         }
 
-
-
-
-
-
-
-
+        $('.thingModal.voice').on('shown.bs.modal', function (e) {
+            self.record();
+            self.$apply();
+        })
 
 
         self.back = function (path) {
             $location.path(path);
         }
-
 
     });
