@@ -43,18 +43,17 @@ var auth = function (req) {
 }
 
 
+var isAuth = function (token) {
 
-var isAuth = function(token){
-
-    if (token == null)
+    if (token == null) {
         return function () {
             var deferred = Q.defer();
             deferred.resolve([]);
             return deferred.promise;
         }();
+    }
 
     var user = jwt.decode(token, AuthConfig.config.secret);
-
 
 
     if (user == null)
@@ -68,7 +67,7 @@ var isAuth = function(token){
     return User.findOne({
         name: user.username, authDate: user.authDate
     }).exec().then(function (user) {
-return user;
+        return user;
     });
 
 

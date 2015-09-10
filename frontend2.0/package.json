@@ -1,0 +1,17 @@
+{
+  "name": "frontend2.0",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp-jade": "^1.0.1",
+    "gulp-stylus": "^2.0.5",
+    "browser-sync": "^2.7.13",
+    "gulp": "^3.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

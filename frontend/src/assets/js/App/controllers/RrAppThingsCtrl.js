@@ -7,37 +7,36 @@ angular.module('RrAppThingsCtrl', [])
         self.things = [];
 
 
-        self.things = thingsData.data.map(function(thing){
+        self.things = thingsData.data.map(function (thing) {
             //for (var i = 0; i < thingsData.data.length; i++) {
-                console.log(thing);
+            console.log(thing);
             m.push(thing);
-                thing.io = io(thing.io);
-                thing.io.on('message', function (payload) {
-                    console.log('  Event:', payload.event);
+            thing.io = io(thing.io);
+            thing.io.on('message', function (payload) {
+                console.log('  Event:', payload.event);
 
-                    console.log(thing);
-                   // console.log(thing.thingType);
-                   // console.log(thingsEvents.events[thing.thingType]);
-                    if(thingsEvents.events[thing.thingType][payload.event] != null)
+                console.log(thing);
+                // console.log(thing.thingType);
+                // console.log(thingsEvents.events[thing.thingType]);
+                if (thingsEvents.events[thing.thingType][payload.event] != null)
                     thingsEvents.events[thing.thingType][payload.event](thing, payload.data);
 
 
-                    thing.disabled = false;
-                    self.$apply()
-                });
-
-                thing.io.emit("grid");
-
-                thing.toggleIo = function () {
-                    console.log(this);
-                    this.disabled = false;
-                    console.log($localStorage.token);
-                    this.io.emit('toggle', {token: $localStorage.token});
-
-                };
-            return thing;
+                thing.disabled = false;
+                self.$apply()
             });
 
+            thing.io.emit("grid");
+
+            thing.toggleIo = function () {
+                console.log(this);
+                this.disabled = false;
+                console.log($localStorage.token);
+                this.io.emit('toggle', {token: $localStorage.token});
+
+            };
+            return thing;
+        });
 
 
         self.clearThings = function () {
