@@ -58,4 +58,93 @@ angular.module('JsxFactory', [])
         return {
             thingsRender: thingsRender
         }
+    })
+
+    .factory('JsxAuthFactory', function () {
+
+        var Logout = React.createClass({
+
+            logout: function(ev) {
+                this.props.scope.logout();
+            },
+
+
+            render: function () {
+
+                var name = this.props.data.username;
+                return (
+                    <section className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp width-fourth">
+                        <div className="mdl-card mdl-cell mdl-cell--12-col">
+                            <div className="mdl-card__supporting-text"><h4>Welcome, </h4> {name}</div>
+                            <div className="mdl-card__actions"><a href="#" className="mdl-button" onClick={this.logout}>Logout</a></div>
+                        </div>
+                    </section>
+                );
+            }
+        });
+
+        var Login = React.createClass({
+
+            login: function(ev) {
+                this.props.scope.login(this.props.name, this.props.pass);
+            },
+
+            setUserName(ev){
+                this.props.name = ev.target.value;
+            },
+
+            setPassword(ev){
+                this.props.pass = ev.target.value;
+            },
+
+            render: function () {
+                //var name = this.props.name;
+                //var pass = this.props.id;
+
+                return (
+                    <section className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp square-card">
+                        <div className="mdl-card mdl-cell mdl-cell--12-col">
+                            <div className="mdl-card__supporting-text"><h4>Login</h4> with your username and pass</div>
+                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input className="mdl-textfield__input" type="text" onChange={this.setUserName} />
+                                    <label className="mdl-textfield__label" htmlFor="sample3">Username...</label>
+                                </div>
+                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input className="mdl-textfield__input" type="text" onChange={this.setPassword} />
+                                <label className="mdl-textfield__label" htmlFor="sample3">Password...</label>
+                            </div>
+                            <div className="mdl-card__actions"><a href="#" className="mdl-button" onClick={this.login}>Login</a></div>
+                        </div>
+                    </section>
+                );
+            }
+        });
+
+        var LoginRender = function(data, scope) {
+
+            if(scope == null || scope == undefined){
+                return;
+            }
+
+            return React.render(
+                <Login data = {data} scope = {scope} />,
+                document.getElementById('loginMe')
+            )};
+
+
+        var LogoutRender = function(data, scope) {
+
+            if(scope == null || scope == undefined){
+                return;
+            }
+
+            return React.render(
+                <Logout data = {data} scope = {scope} />,
+                document.getElementById('loginMe')
+            )};
+
+        return {
+            LoginRender: LoginRender,
+            LogoutRender: LogoutRender
+        }
     });

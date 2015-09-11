@@ -1,0 +1,16 @@
+.square-card{
+    width: 320px;
+    height: 320px;
+}
+
+.width-fourth{
+    width: 230px;
+}
+
+.square-card .mdl-textfield{
+    left: 10px;
+}
+
+#auth .mdl-card__supporting-text {
+    margin: 35px;
+}

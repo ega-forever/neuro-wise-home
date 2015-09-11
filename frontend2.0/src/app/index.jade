@@ -23,6 +23,7 @@ html(lang='en', ng-app="RrApp")
           <link rel="canonical" href="http://www.example.com/">
         link(href='https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&lang=en', rel='stylesheet')
         link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
+        link(rel='stylesheet', href='css/custom.css')
         link(rel='stylesheet', href='css/mdl/css/material.min.css')
         link(rel='stylesheet', href='css/styles.css')
         style.
@@ -42,10 +43,13 @@ html(lang='en', ng-app="RrApp")
         //script(src='js/react/JSXTransformer.js')
         script(src='js/angular/angular.js')
         script(src='js/angular/angular-route.js')
+        script(src='js/angular/ngStorage.min.js')
         //script(type="text/jsx" src='js/things/things.jsx')
         script(src='js/RrApp/RrAppJsxFactory.js')
         script(src='js/RrApp/RrAppThingsCtrl.js')
         script(src='js/RrApp/RrAppMainCtrl.js')
+        script(src='js/RrApp/RrAppAuthCtrl.js')
+        script(src='js/RrApp/services/RrAppRestService.js')
         script(src='js/RrApp.js')
 
 
@@ -61,6 +65,7 @@ html(lang='en', ng-app="RrApp")
                     a.mdl-layout__tab.is-active(href='#overview') Overview
                     a.mdl-layout__tab(href='#wNet') Wise Network
                     a.mdl-layout__tab(href='#things') Things
+                    a.mdl-layout__tab(href='#auth', ng-controller="authCtrl") {{storage.username || 'Login'}}
 
             main.mdl-layout__content
 
@@ -135,6 +140,10 @@ html(lang='en', ng-app="RrApp")
                             li.mdl-menu__item Dolor
 
                     div#thingsSet loading...
+
+                #auth.mdl-layout__tab-panel(ng-controller="authCtrl")
+                    div.row
+                        div#loginMe
 
 
 

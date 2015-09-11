@@ -1,3 +1,3 @@
 (function(angular, React) {
-    angular.module('RrApp', [ 'RrAppThingsCtrl', 'JsxFactory']);
+    angular.module('RrApp', [ 'ngStorage', 'RrAppThingsCtrl', 'JsxFactory', 'RrAppRestService', 'RrAppAuthCtrl']);
 })(angular, React);
