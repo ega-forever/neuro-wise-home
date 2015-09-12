@@ -28,13 +28,13 @@ angular.module('RrAppThingsCtrl', [])
         }
 
         _this.ChangeOption = function (thing, option, newState) {
-            console.log('in change');
+            console.log('in change: ' + option);
+            console.log(option);
             thing.io.once('change', function (d) {
                 console.log('changed');
-                //console.log(d);
                 socket.emit('authIo', {token: $localStorage.token});
             });
-            thing.io.emit('toggle');
+            thing.io.emit(option.replace("State", ""));
         }
 
     });

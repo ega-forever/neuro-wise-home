@@ -22,7 +22,8 @@ angular.module('JsxFactory', [])
                 this.props.scope.AttachThing();
             },
 
-            ChangeOption: function(evt, option) {
+            ChangeOption: function(option, evt) {
+                console.log(option);
                 var newState = !this.props.states[option];
                 console.log(this);
                 this.props.scope.ChangeOption(this.props, option, newState);
@@ -40,8 +41,8 @@ angular.module('JsxFactory', [])
                 var states = [];
                     console.log(this.props);
                     for(var i in this.props.states){
-                        states.push(<li className="mdl-menu__item">
-                            <span data-badge="" className={"mdl-badge " + (this.props.states[i] ? 'green' : 'red')} onClick={this.ChangeOption.bind(this, i)}>{i.replace("State", "")}</span>
+                        states.push(<li className="mdl-menu__item" onClick={this.ChangeOption.bind(this, i)}>
+                            <span data-badge="" className={"mdl-badge " + (this.props.states[i] ? 'green' : 'red')}>{i.replace("State", "")}</span>
                         </li>);
                     }
                 return (
