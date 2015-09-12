@@ -4,11 +4,23 @@ var ctrlAuth = require('../controllers/CtrlAuth');
 var q = require('q');
 var _ = require('lodash');
 var io = require('socket.io');
+//var Cylon = require('cylon')
+
 
 var getThings = function (user) {
     var deferred = q.defer();
     User.findOne({_id: user.id}).exec().then(function (data) {
 
+        data.things = data.things.map(function(t){
+
+            console.log('before');
+            var commands = _.keys(thingsApi.thingsLogic(new thingStateFactory(t), {robot: function(d){return d;}}).commands());
+
+            commands.forEach(function(i){
+                t.state == null ? (t.state = {}, t.state[i + "State"] = false) : t.state[i + "State"] == null ?  t.state[i + "State"] = false : t.state[i + "State"];
+            });
+            return t;
+        });
         deferred.resolve(data.things);
 
     }, function (err) {
