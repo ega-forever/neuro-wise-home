@@ -1,7 +1,9 @@
 var User = require('../models/UserSchemaModel');
+var thingsApi = require('../data/thingsApi/thingsApi');
+var ctrlAuth = require('../controllers/CtrlAuth');
 var q = require('q');
 var _ = require('lodash');
-
+var io = require('socket.io');
 
 var getThings = function (user) {
     var deferred = q.defer();
@@ -64,5 +66,43 @@ var setThings = function (user, thing, option) {
     return deferred.promise;
 }
 
+var initIo = function (cylon, cylonConfig, ioConfig) {
+
+    cylon.api('socketio', cylonConfig);
+    io = io(ioConfig.port);
+    console.log('started io..');
+    thingsIo(cylon, io);
+    return io;
+}
+
+var thingsIo = function (cylon, io) {
+    ctrlAuth.socketAuth(io).then(function(user){
+        //console.log('in thingsIo: ' + user);
+        user.things.forEach(function(t){
+
+            var thingAccessor = new thingStateFactory(t);
+            thingAccessor.set = function(_this, option){
+                console.log('changed: ' + option);
+                t[option.option] = option.value;
+                setThings(user, t, "update").then(function(d){
+                    console.log("updated");
+                    _this.emit('change', {state: d});
+                });
+            };
+
+            var thing = thingsApi.thingsLogic(thingAccessor, cylon);
+            thing.start();
+           });
+    });
+}
+
+
+var thingStateFactory = function(d){
+    var data = d;
+    this.get = function(param){return data[param] == null ? {} : data[param]};
+    this.set = function(){/*to override*/};
+}
+
 module.exports.set = setThings;
 module.exports.get = getThings;
+module.exports.initIo = initIo;

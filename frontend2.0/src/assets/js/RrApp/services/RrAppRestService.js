@@ -4,7 +4,7 @@ angular.module('RrAppRestService', [])
         return {
             getThings: function () {
                 {
-                    return $http.post('http://localhost:9000/rest-things', {headers: {'x-access-token' : $localStorage.token}})
+                    return $http.get('http://localhost:9000/rest-things', {headers: {'x-access-token' : $localStorage.token}})
                         .success(function(data){
                             return data;
                     });

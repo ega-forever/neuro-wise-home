@@ -1,13 +1,13 @@
 var express = require('express');
 //var bodyParser   = require('body-parser');
-//var cylon = require('cylon')
+var cylon = require('cylon')
 //var restTalk = require('./routes/rest/restTalk');
 var restThings = require('./routes/rest/restThings');
 var restAuth = require('./routes/rest/restUserAuth');
 var restConfigure = require('./routes/rest/restConfigure');
 var restVoiceCommand = require('./routes/rest/restVoiceCommand');
 var restCommands = require('./routes/rest/restCommands');
-//var ctrlThings = require('./controllers/CtrlThings');
+var ctrlThings = require('./controllers/CtrlThings');
 var ctrlNeuro = require('./controllers/CtrlNeuro');
 var ExpressConfigure = require('./config/ExpressConfig');
 var mongoose = require('mongoose');
@@ -21,12 +21,11 @@ mongoose.connect(mongooseConfig.database);
 ExpressConfigure.configure(app, restThings, restAuth, restVoiceCommand, restCommands);
 //serialTest.fetchList();
 
-/*replace with socket.io
-ctrlThings.initCylon(cylon, {
+ctrlThings.initIo(cylon, {
     host: '0.0.0.0',
     port: '9001'
-});
-*/
+}, {port: '9002'});
+
 //ctrlNeuro.initNeuro({port: '9002'});
 
 
@@ -53,7 +52,7 @@ var user = new userModel({
     name: 'user',
     password: 123,
     authDate: new Date(),
-    things: null
+    things: [{id: 44, name: 'super', type: 'led', state: 'connected'}]
 });
 user.save();
 */

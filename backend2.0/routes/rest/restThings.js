@@ -5,7 +5,7 @@ var get = function (req, res) {
     CtrlAuth.userAuthCtrlCheker(req.headers['x-access-token']).then(function (user) {
         if (user != null && user.id != null) {
             CtrlThings.get(user).then(function (d) {
-                res.send(JSON.stringify(d));
+                res.send(d);
             })
         } else {
             res.send([]);

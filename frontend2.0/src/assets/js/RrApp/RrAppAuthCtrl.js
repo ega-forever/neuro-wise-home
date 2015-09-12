@@ -5,7 +5,6 @@ angular.module('RrAppAuthCtrl', [])
         _this.storage = $localStorage;
         _this.login = function(username, password){
             restService.auth(username, password).then(function(d){
-                console.log(d.data);
                 $localStorage.token = d.data.token;
                 $localStorage.username = d.data.username;
                 JsxAuthFactory.LogoutRender(d.data, _this);
@@ -14,9 +13,7 @@ angular.module('RrAppAuthCtrl', [])
         }
 
         _this.logout = function(){
-            //todo clear localstorage
             $localStorage.$reset();
-            console.log($localStorage);
             $scope.$apply();
             JsxAuthFactory.LoginRender({}, _this);
         }

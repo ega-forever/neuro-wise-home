@@ -32,7 +32,7 @@ var config = function (app,  restThings, restAuth, restVoiceCommand, restCommand
     app.post('/authenticate', restAuth.auth);
 
 //our options to method converter
-    //app.options('/authenticate', cors());//todo remove in future
+    app.options('/rest-things', cors());//todo remove in future
     //app.options('/api/users', cors());//todo remove in future
 
 }

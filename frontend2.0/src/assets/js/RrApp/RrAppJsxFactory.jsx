@@ -4,6 +4,7 @@ angular.module('JsxFactory', [])
         var Things = React.createClass({
             render: function () {
             var scope = this.props.scope;
+                console.log(this.props.data);
                 return <div>
                     {this.props.data.map(function (i) {
                         return (<Thing name={i.name} id={i.id} scope = {scope} initialAttached = {false} />);

@@ -3,7 +3,7 @@ var jwt = require('jsonwebtoken');
 var AuthConfig = require('../config/AuthConfig');
 var mongoose = require('mongoose');
 var promise = new mongoose.Promise;
-var Q = require('q');
+var q = require('q');
 
 
 var auth = function (req) {
@@ -73,5 +73,27 @@ var isAuth = function (token) {
 
 }
 
+
+var getIdByToken = function (token) {
+    return jwt.decode(token, AuthConfig.config.secret).id;
+}
+
+var socketAuth = function (io) {
+    var deferred = q.defer();
+    io.of('/auth').on('connection', function (socket) {
+        socket.on('authIo', function (data) {
+            if (data != null && data.token != null) {
+                var user = isAuth(data.token);
+                return user == null ? deferred.resolve() : (deferred.resolve(user), socket.emit('ok'));
+            } else {
+                deferred.resolve();
+            }
+        });
+    });
+    return deferred.promise;
+}
+
 module.exports.userAuthCtrl = auth;
 module.exports.userAuthCtrlCheker = isAuth;
+module.exports.socketAuth = socketAuth;
+module.exports.getIdByToken = getIdByToken;
