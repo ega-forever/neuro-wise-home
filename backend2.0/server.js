@@ -52,7 +52,7 @@ var user = new userModel({
     name: 'user',
     password: 123,
     authDate: new Date(),
-    things: [{id: 44, name: 'super', type: 'led', state: 'connected'}]
+    things: [{id: 44, name: 'super', type: 'led', state: {connected: false}}]
 });
 user.save();
 */

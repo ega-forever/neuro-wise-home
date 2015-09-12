@@ -140,11 +140,13 @@ html, body {
 .mdl-demo section > header > .material-icons {
   font-size: 3rem;
 }
-.mdl-demo section > button {
+.mdl-demo section > .mdl-card > button {
   position: absolute;
   z-index: 99;
   top: 8px;
   right: 8px;
+  height:32px;
+  width:32px;
 }
 .mdl-demo section .section__circle {
   display: -webkit-box;

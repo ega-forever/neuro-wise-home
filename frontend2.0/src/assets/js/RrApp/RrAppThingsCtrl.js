@@ -12,12 +12,15 @@ angular.module('RrAppThingsCtrl', [])
                 restService.getThings().then(function (d) {
                     console.log(d);
 
-                    var testThingsSuper = io('http://localhost:9001/api/robots/super');
-                    testThingsSuper.emit('toggle');
+                    d.data.map(function(th){
+                        th.socketObj = {io: io('http://localhost:9001/api/robots/' + th.name)};
+                        th.socketObj.io.emit('toggle');
+                        th.socketObj.io.on('change', function(d){
+                            console.log('changed');
+                            console.log(d);
+                        });
+                    })
 
-                    testThingsSuper.on('change', function(d){
-                        console.log('changed: ' + d);
-                    });
 
                     JsxThingsFactory.thingsRender(d.data, _this);
                 })

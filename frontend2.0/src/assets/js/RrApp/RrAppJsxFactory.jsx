@@ -22,7 +22,13 @@ angular.module('JsxFactory', [])
                 this.props.scope.AttachThing();
             },
 
-            render: function () {
+            componentDidMount: function() {
+                var id = this.props.id;
+                componentHandler.upgradeElement(document.getElementsByClassName('btn' + id)[0]);
+                componentHandler.upgradeElement(document.getElementById('btn' + id));
+            },
+
+                render: function () {
                 var name = this.props.name;
                 var id = this.props.id;
 
@@ -30,16 +36,18 @@ angular.module('JsxFactory', [])
                     <section className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp mdl-cell mdl-cell--6-col">
                         <div className="mdl-card mdl-cell mdl-cell--12-col">
                             <div className="mdl-card__supporting-text"><h4>{name} # {id}</h4> {name} 1 info...</div>
+
                             <div className="mdl-card__actions"><a href="#" className="mdl-button" onClick={this.AttachThing}>{this.state.attached ? 'Detach thing' : 'Attach thing'}</a></div>
-                        </div>
+
                         <button id={"btn" + id} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                             <i className="material-icons">more_vert</i>
                         </button>
-                        <ul htmlFor={"btn" + id} className="mdl-menu mdl-js-menu mdl-menu--bottom-right">
+                        <ul htmlFor={"btn" + id} className={"mdl-menu mdl-js-menu mdl-menu--bottom-right " + 'btn' + id} >
                             <li className="mdl-menu__item">Lorem</li>
                             <li disabled="" className="mdl-menu__item">Ipsum</li>
                             <li className="mdl-menu__item">Dolor</li>
                         </ul>
+                        </div>
                     </section>
                 );
             }
@@ -51,7 +59,7 @@ angular.module('JsxFactory', [])
                 return;
             }
 
-            return React.render(
+             return React.render(
                 <Things data = {data} scope = {scope} />,
                 document.getElementById('thingsSet')
             )};
