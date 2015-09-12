@@ -9,7 +9,6 @@ var getThings = function (user) {
     var deferred = q.defer();
     User.findOne({_id: user.id}).exec().then(function (data) {
 
-        console.log(data.things);
         deferred.resolve(data.things);
 
     }, function (err) {
@@ -84,7 +83,6 @@ var thingsIo = function (cylon, io) {
 
             var thingAccessor = new thingStateFactory(t);
             thingAccessor.set = function(_this, option){
-                console.log('changed: ' + option);
 
                 _.isObject(t.state) ? t.state[option.option] = option.value : t.state = {},t.state[option.option] = option.value;
                 setThings(user, t, "update").then(function(d){

@@ -2,25 +2,17 @@ angular.module('RrAppThingsCtrl', [])
     .controller('thingsCtrl', function (JsxThingsFactory, $scope, restService, $localStorage) {
         var _this = $scope;
         // var data = [{name: 'super!!!', id: 1237}, {name: 'super2', id : 54}];//test
-
-
         var socket = io('http://localhost:9002/auth');
+
         if ($localStorage.token) {
-            socket.emit('authIo', {token: $localStorage.token});
             socket.on('ok', function () {
                 console.log('authed...');
                 restService.getThings().then(function (d) {
                     console.log(d);
 
-                    d.data.map(function(th){
+                    d.data.map(function (th) {
                         th.socketObj = {io: io('http://localhost:9001/api/robots/' + th.name)};
-                        th.socketObj.io.emit('toggle');
-                        th.socketObj.io.on('change', function(d){
-                            console.log('changed');
-                            console.log(d);
-                        });
                     })
-
 
                     JsxThingsFactory.thingsRender(d.data, _this);
                 })
@@ -29,9 +21,20 @@ angular.module('RrAppThingsCtrl', [])
             JsxThingsFactory.thingsRender([], _this);
         }
 
+        socket.emit('authIo', {token: $localStorage.token});
 
         _this.AttachThing = function () {
             alert('super');
+        }
+
+        _this.ChangeOption = function (thing, option, newState) {
+            console.log('in change');
+            thing.io.once('change', function (d) {
+                console.log('changed');
+                //console.log(d);
+                socket.emit('authIo', {token: $localStorage.token});
+            });
+            thing.io.emit('toggle');
         }
 
     });

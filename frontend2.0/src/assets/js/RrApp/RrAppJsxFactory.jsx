@@ -7,7 +7,7 @@ angular.module('JsxFactory', [])
                 console.log(this.props.data);
                 return <div>
                     {this.props.data.map(function (i) {
-                        return (<Thing name={i.name} id={i.id} scope = {scope} initialAttached = {false} />);
+                        return (<Thing name={i.name} id={i.id} states={i.state} io = {i.socketObj.io} scope = {scope} initialAttached = {false} />);
                     })
                     }</div>
             }
@@ -22,6 +22,12 @@ angular.module('JsxFactory', [])
                 this.props.scope.AttachThing();
             },
 
+            ChangeOption: function(evt, option) {
+                var newState = !this.props.states[option];
+                console.log(this);
+                this.props.scope.ChangeOption(this.props, option, newState);
+            },
+
             componentDidMount: function() {
                 var id = this.props.id;
                 componentHandler.upgradeElement(document.getElementsByClassName('btn' + id)[0]);
@@ -31,7 +37,13 @@ angular.module('JsxFactory', [])
                 render: function () {
                 var name = this.props.name;
                 var id = this.props.id;
-
+                var states = [];
+                    console.log(this.props);
+                    for(var i in this.props.states){
+                        states.push(<li className="mdl-menu__item">
+                            <span data-badge="" className={"mdl-badge " + (this.props.states[i] ? 'green' : 'red')} onClick={this.ChangeOption.bind(this, i)}>{i.replace("State", "")}</span>
+                        </li>);
+                    }
                 return (
                     <section className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp mdl-cell mdl-cell--6-col">
                         <div className="mdl-card mdl-cell mdl-cell--12-col">
@@ -43,9 +55,7 @@ angular.module('JsxFactory', [])
                             <i className="material-icons">more_vert</i>
                         </button>
                         <ul htmlFor={"btn" + id} className={"mdl-menu mdl-js-menu mdl-menu--bottom-right " + 'btn' + id} >
-                            <li className="mdl-menu__item">Lorem</li>
-                            <li disabled="" className="mdl-menu__item">Ipsum</li>
-                            <li className="mdl-menu__item">Dolor</li>
+                            {states}
                         </ul>
                         </div>
                     </section>

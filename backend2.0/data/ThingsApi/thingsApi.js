@@ -23,8 +23,9 @@ var thingsLogic = function (proto, cylon) {
                     };
                 },
                 toggle: function () {
-                    console.log('toggle');
-                    if (data.get('toggleState')) {
+                    console.log('toggle: ' + data.get('state').toggleState);
+                    console.log(data.get('state').toggleState);
+                    if (data.get('state').toggleState) {
                         data.set(this, {option: 'toggleState', value: false});
                     } else {
                         data.set(this, {option: 'toggleState', value: true});

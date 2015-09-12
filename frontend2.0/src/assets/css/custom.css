@@ -14,3 +14,11 @@
 #auth .mdl-card__supporting-text {
     margin: 35px;
 }
+
+.mdl-badge.green[data-badge]:after {
+    background:rgb(76, 175, 80);
+}
+
+.mdl-badge.red[data-badge]:after {
+    background:rgb(244, 67, 54);
+}
