@@ -12,7 +12,6 @@ var ctrlNeuro = require('./controllers/CtrlNeuro');
 var ExpressConfigure = require('./config/ExpressConfig');
 var mongoose = require('mongoose');
 var mongooseConfig = require('./config/MongoConfig');
-var serialTest = require('./data/ThingsPorts/ThingsPorts.js');
 var app = express();
 
 
@@ -52,7 +51,7 @@ var user = new userModel({
     name: 'user',
     password: 123,
     authDate: new Date(),
-    things: [{id: 44, name: 'super', type: 'led', state: {}}]
+    things: []
 });
 user.save();
 */

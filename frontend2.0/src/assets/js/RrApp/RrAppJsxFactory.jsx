@@ -31,8 +31,8 @@ angular.module('JsxFactory', [])
 
             componentDidMount: function() {
                 var id = this.props.id;
-                componentHandler.upgradeElement(document.getElementsByClassName('btn' + id)[0]);
-                componentHandler.upgradeElement(document.getElementById('btn' + id));
+                componentHandler.upgradeElements(document.getElementsByClassName('btn-' + id));
+                componentHandler.upgradeElement(document.getElementById('btn-' + id));
             },
 
                 render: function () {
@@ -52,10 +52,10 @@ angular.module('JsxFactory', [])
 
                             <div className="mdl-card__actions"><a href="#" className="mdl-button" onClick={this.AttachThing}>{this.state.attached ? 'Detach thing' : 'Attach thing'}</a></div>
 
-                        <button id={"btn" + id} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                        <button id={"btn-" + id} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                             <i className="material-icons">more_vert</i>
                         </button>
-                        <ul htmlFor={"btn" + id} className={"mdl-menu mdl-js-menu mdl-menu--bottom-right " + 'btn' + id} >
+                        <ul htmlFor={"btn-" + id} className={"mdl-menu mdl-js-menu mdl-menu--bottom-right " + 'btn-' + id} >
                             {states}
                         </ul>
                         </div>

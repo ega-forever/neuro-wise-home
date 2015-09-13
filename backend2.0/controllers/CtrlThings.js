@@ -1,23 +1,28 @@
 var User = require('../models/UserSchemaModel');
+var ThingModel = require('../models/ThingModel');
 var thingsApi = require('../data/thingsApi/thingsApi');
 var ctrlAuth = require('../controllers/CtrlAuth');
 var q = require('q');
 var _ = require('lodash');
 var io = require('socket.io');
-//var Cylon = require('cylon')
+//var serialPort = require("serialport");
+var ThingsConfigured = require('../config/ThingsConfig');
 
 
 var getThings = function (user) {
     var deferred = q.defer();
     User.findOne({_id: user.id}).exec().then(function (data) {
 
-        data.things = data.things.map(function(t){
+        data.things = data.things.map(function (t) {
 
-            console.log('before');
-            var commands = _.keys(thingsApi.thingsLogic(new thingStateFactory(t), {robot: function(d){return d;}}).commands());
+            var commands = _.keys(thingsApi.thingsLogic(new thingStateFactory(t), {
+                robot: function (d) {
+                    return d;
+                }
+            }).commands());
 
-            commands.forEach(function(i){
-                t.state == null ? (t.state = {}, t.state[i + "State"] = false) : t.state[i + "State"] == null ?  t.state[i + "State"] = false : t.state[i + "State"];
+            commands.forEach(function (i) {
+                t.state == null ? (t.state = {}, t.state[i + "State"] = false) : t.state[i + "State"] == null ? t.state[i + "State"] = false : t.state[i + "State"];
             });
             return t;
         });
@@ -59,6 +64,13 @@ var setThings = function (user, thing, option) {
                 data.things == null ? data.things = [thing] : data.things.push(thing);
             }
 
+        } else if (option == "addAll") {
+
+            data.things == null ? data.things = thing : data.things = _.reject(thing, function (t) {
+                return _.includes(data.things, {id: t.id});
+            });
+console.log("addAll");
+            console.log(data.things);
         } else {
             deferred.resolve('no option');
         }
@@ -89,32 +101,47 @@ var initIo = function (cylon, cylonConfig, ioConfig) {
 }
 
 var thingsIo = function (cylon, io) {
-    ctrlAuth.socketAuth(io).then(function(user){
+    ctrlAuth.socketAuth(io).then(function (user) {
         console.log('in thingsIo: ' + user);
-        user.things.forEach(function(t){
 
-            var thingAccessor = new thingStateFactory(t);
-            thingAccessor.set = function(_this, option){
+        setThings(user, ThingsConfigured, "addAll").then(function () {
 
-                _.isObject(t.state) ? t.state[option.option] = option.value : t.state = {},t.state[option.option] = option.value;
-                setThings(user, t, "update").then(function(d){
-                    console.log("updated");
-                    _this.emit('change', {state: d});
-                });
-            };
 
-            var thing = thingsApi.thingsLogic(thingAccessor, cylon);
-            thing.start();
-           });
+            user.things = _.reject(ThingsConfigured, function (t) {
+                return _.includes(user.things, {id: t.id});
+            });
+
+
+            console.log(2);
+            user.things.forEach(function (t) {
+
+                var thingAccessor = new thingStateFactory(t);
+                thingAccessor.set = function (_this, option) {
+
+                    _.isObject(t.state) ? t.state[option.option] = option.value : t.state = {}, t.state[option.option] = option.value;
+                    setThings(user, t, "update").then(function (d) {
+                        console.log("updated");
+                        _this.emit('change', {state: d});
+                    });
+                };
+
+                var thing = thingsApi.thingsLogic(thingAccessor, cylon);
+                thing.start();
+            });
+        });
     });
+
 }
 
-
-var thingStateFactory = function(d){
+var thingStateFactory = function (d) {
     var data = d;
-    this.get = function(param){return data[param] == null ? {} : data[param]};
-    this.set = function(){/*to override*/};
+    this.get = function (param) {
+        return data[param] == null ? {} : data[param]
+    };
+    this.set = function () {/*to override*/
+    };
 }
+
 
 module.exports.set = setThings;
 module.exports.get = getThings;
