@@ -30,6 +30,7 @@ angular.module('RrAppThingsCtrl', [])
         _this.ChangeOption = function (thing, option, newState) {
             thing.io.once('change', function (d) {
                 socket.emit('authIo', {token: $localStorage.token});
+                //location.reload();
             });
             thing.io.emit(option.replace("State", ""));
         }

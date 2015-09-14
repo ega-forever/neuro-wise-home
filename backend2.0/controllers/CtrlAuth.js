@@ -4,6 +4,7 @@ var AuthConfig = require('../config/AuthConfig');
 var mongoose = require('mongoose');
 var promise = new mongoose.Promise;
 var q = require('q');
+var events = new require('events');
 
 
 var auth = function (req) {
@@ -47,7 +48,7 @@ var isAuth = function (token) {
 
     if (token == null) {
         return function () {
-            var deferred = Q.defer();
+            var deferred = q.defer();
             deferred.resolve([]);
             return deferred.promise;
         }();
@@ -58,7 +59,7 @@ var isAuth = function (token) {
 
     if (user == null)
         return function () {
-            var deferred = Q.defer();
+            var deferred = q.defer();
             deferred.resolve([]);
             return deferred.promise;
         }();
@@ -80,13 +81,24 @@ var getIdByToken = function (token) {
 
 var socketAuth = function (io) {
     var deferred = q.defer();
+
+
+    var eventEmitter = new events.EventEmitter();
+
+    //eventEmitter.addListener("authed", function(){});
+
+    deferred.resolve(eventEmitter);
+
+
     io.of('/auth').on('connection', function (socket) {
         socket.on('authIo', function (data) {
             if (data != null && data.token != null) {
                 var user = isAuth(data.token);
-                return user == null ? deferred.resolve() : (deferred.resolve(user), socket.emit('ok'));
+                user.then(function(d){
+                    return user == null ? eventEmitter.emit("authed", null)  : ( eventEmitter.emit("authed", d) , socket.emit('ok'));
+                })
             } else {
-                deferred.resolve();
+                eventEmitter.emit("authed", null);
             }
         });
     });

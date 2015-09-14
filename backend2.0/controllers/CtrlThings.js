@@ -69,8 +69,7 @@ var setThings = function (user, thing, option) {
             data.things == null ? data.things = thing : data.things = _.reject(thing, function (t) {
                 return _.includes(data.things, {id: t.id});
             });
-console.log("addAll");
-            console.log(data.things);
+
         } else {
             deferred.resolve('no option');
         }
@@ -101,34 +100,36 @@ var initIo = function (cylon, cylonConfig, ioConfig) {
 }
 
 var thingsIo = function (cylon, io) {
-    ctrlAuth.socketAuth(io).then(function (user) {
-        console.log('in thingsIo: ' + user);
-
-        setThings(user, ThingsConfigured, "addAll").then(function () {
+    ctrlAuth.socketAuth(io).then(function (events) {
 
 
-            user.things = _.reject(ThingsConfigured, function (t) {
-                return _.includes(user.things, {id: t.id});
+        events.on("authed", function (user) {
+            
+            setThings(user, ThingsConfigured, "addAll").then(function () {
+
+                user.things = _.reject(ThingsConfigured, function (t) {
+                    return _.includes(user.things, {id: t.id});
+                });
+
+                user.things.forEach(function (t) {
+
+                    var thingAccessor = new thingStateFactory(t);
+                    thingAccessor.set = function (_this, option) {
+
+                        _.isObject(t.state) ? t.state[option.option] = option.value : t.state = {}, t.state[option.option] = option.value;
+                        setThings(user, t, "update").then(function (d) {
+                            console.log("updated");
+                            _this.emit('change', {state: d});
+                        });
+                    };
+
+                    cylon.MCP.robots[t.name] == null ? thingsApi.thingsLogic(thingAccessor, cylon).start() :  null;
+
+                });
             });
 
-
-            console.log(2);
-            user.things.forEach(function (t) {
-
-                var thingAccessor = new thingStateFactory(t);
-                thingAccessor.set = function (_this, option) {
-
-                    _.isObject(t.state) ? t.state[option.option] = option.value : t.state = {}, t.state[option.option] = option.value;
-                    setThings(user, t, "update").then(function (d) {
-                        console.log("updated");
-                        _this.emit('change', {state: d});
-                    });
-                };
-
-                var thing = thingsApi.thingsLogic(thingAccessor, cylon);
-                thing.start();
-            });
         });
+
     });
 
 }
