@@ -104,7 +104,7 @@ var thingsIo = function (cylon, io) {
 
 
         events.on("authed", function (user) {
-            
+
             setThings(user, ThingsConfigured, "addAll").then(function () {
 
                 user.things = _.reject(ThingsConfigured, function (t) {

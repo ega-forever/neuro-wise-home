@@ -25,7 +25,7 @@ ctrlThings.initIo(cylon, {
     port: '9001'
 }, {port: '9002'});
 
-//ctrlNeuro.initNeuro({port: '9002'});
+ctrlNeuro.initNeuro({port: '9003'});
 
 
 

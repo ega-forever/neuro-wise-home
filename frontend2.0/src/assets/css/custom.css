@@ -23,3 +23,6 @@
     background:rgb(244, 67, 54);
 }
 
+.demo-chart:nth-child(1) {
+    color: #ACEC00;
+}

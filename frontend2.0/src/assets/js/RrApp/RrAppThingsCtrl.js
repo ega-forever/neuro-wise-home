@@ -2,7 +2,7 @@ angular.module('RrAppThingsCtrl', [])
     .controller('thingsCtrl', function (JsxThingsFactory, $scope, restService, $localStorage) {
         var _this = $scope;
         // var data = [{name: 'super!!!', id: 1237}, {name: 'super2', id : 54}];//test
-        var socket = io('http://localhost:9002/auth');
+        var socket = io('http://localhost:9002/auth');//todo pass to socket factory for auth login-logout handle
 
         if ($localStorage.token) {
             socket.on('ok', function () {

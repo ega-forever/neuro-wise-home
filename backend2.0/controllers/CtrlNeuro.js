@@ -35,6 +35,7 @@ tgClient.on('data', function (data) {
 
 var init = function (data) {
     io = io(data.port);
+    console.log('!!@');
     io.of('/neuro').on('connection', function (socket) {
         socket.emit('auth');
 
