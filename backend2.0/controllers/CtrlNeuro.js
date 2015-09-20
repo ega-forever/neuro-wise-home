@@ -58,7 +58,7 @@ var init = function (data) {
 
 
 
-    tgClient.connect();
+    //tgClient.connect();
 }
 
 

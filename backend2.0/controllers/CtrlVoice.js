@@ -1,9 +1,10 @@
 var Q = require('q');
 var neuronApi = require('../data/NeuronApi/NeuronApi');
 var ctrlThings = require('./CtrlThings');
-var executeVoiceCommand = function (user, data, token) {
+var executeVoiceCommand = function (user, command) {
 
-
+    console.log(command);
+    console.log(user);
     return function () {
         var deferred = Q.defer();
 
@@ -13,26 +14,17 @@ var executeVoiceCommand = function (user, data, token) {
         }
 
 
-         neuronApi.getCommand(data).then(function(data) {
+        neuronApi.getCommand(command).then(function (data) {
 
-             if(data == null){
-                 deferred.resolve([]);
-             }
+            if (data == null) {
+                deferred.resolve([]);
+            }
 
             console.log('label: ' + data);
 
-            ctrlThings.getThings().map(function (t) {
-                var m = data.split('-');
-                if (t.trigger == m[0].trim()) {
-                    console.log('inside');
-                    console.log(m[1].trim());
-                    t.controller[m[1].trim()]({token: token});
-                }
-            });
-
-
-            deferred.resolve();
+            deferred.resolve(data);
         });
+
         return deferred.promise;
 
 
@@ -40,4 +32,10 @@ var executeVoiceCommand = function (user, data, token) {
 }
 
 
+var getVoiceCommands = function () {
+    return neuronApi.getCommandsList();
+}
+
+
 module.exports.executeVoiceCommand = executeVoiceCommand;
+module.exports.getVoiceCommands = getVoiceCommands;

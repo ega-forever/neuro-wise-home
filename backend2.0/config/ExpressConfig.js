@@ -25,7 +25,7 @@ var config = function (app,  restThings, restAuth, restVoiceCommand, restCommand
     //our routes
     app.post('/rest-things', restThings.set);
     app.get('/rest-things', restThings.get);
-    //app.post('/rest-voice', restVoiceCommand.execute);
+    app.get('/rest-voice', restVoiceCommand.execute);
     //app.get('/rest-commands', restCommands.get);
     //app.post('/rest-command', restCommands.set);
 
@@ -33,6 +33,8 @@ var config = function (app,  restThings, restAuth, restVoiceCommand, restCommand
 
 //our options to method converter
     app.options('/rest-things', cors());//todo remove in future
+    app.options('/rest-voice', cors());//todo remove in future
+
     //app.options('/api/users', cors());//todo remove in future
 
 }

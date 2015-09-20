@@ -27,6 +27,11 @@ angular.module('RrAppThingsCtrl', [])
             alert('super');
         }
 
+
+        _this.SaveVoiceThing = function () {
+            alert('super');
+        }
+
         _this.ChangeOption = function (thing, option, newState) {
             thing.io.once('change', function (d) {
                 socket.emit('authIo', {token: $localStorage.token});

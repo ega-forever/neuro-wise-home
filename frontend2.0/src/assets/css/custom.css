@@ -26,3 +26,17 @@
 .demo-chart:nth-child(1) {
     color: #ACEC00;
 }
+
+
+#thingsSet > div > section > div > table {
+    left:5px;
+}
+
+
+#thingsSet .mdl-textfield{
+    width: 340px;
+}
+
+#thingsSet .mdl-card__actions{
+    text-align: center;
+}

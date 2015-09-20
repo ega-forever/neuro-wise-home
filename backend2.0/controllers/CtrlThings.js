@@ -8,6 +8,8 @@ var io = require('socket.io');
 //var serialPort = require("serialport");
 var ThingsConfigured = require('../config/ThingsConfig');
 
+var ctrlVoice = require('../controllers/CtrlVoice');
+
 
 var getThings = function (user) {
     var deferred = q.defer();
@@ -24,9 +26,21 @@ var getThings = function (user) {
             commands.forEach(function (i) {
                 t.state == null ? (t.state = {}, t.state[i + "State"] = false) : t.state[i + "State"] == null ? t.state[i + "State"] = false : t.state[i + "State"];
             });
+
             return t;
         });
-        deferred.resolve(data.things);
+
+
+        ctrlVoice.getVoiceCommands().then(function (thingsInVoice) {
+            data.things.forEach(function (thi) {
+                thi.voice = _.chain(thingsInVoice).find({point: thi.name})
+                    .result('classifier', []).value();
+            });
+
+            deferred.resolve(data.things);
+
+        });
+
 
     }, function (err) {
         if (err) {
@@ -123,7 +137,7 @@ var thingsIo = function (cylon, io) {
                         });
                     };
 
-                    cylon.MCP.robots[t.name] == null ? thingsApi.thingsLogic(thingAccessor, cylon).start() :  null;
+                    cylon.MCP.robots[t.name] == null ? thingsApi.thingsLogic(thingAccessor, cylon).start() : null;
 
                 });
             });

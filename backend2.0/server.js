@@ -1,7 +1,5 @@
 var express = require('express');
-//var bodyParser   = require('body-parser');
-var cylon = require('cylon')
-//var restTalk = require('./routes/rest/restTalk');
+var cylon = require('cylon');
 var restThings = require('./routes/rest/restThings');
 var restAuth = require('./routes/rest/restUserAuth');
 var restConfigure = require('./routes/rest/restConfigure');
@@ -12,13 +10,13 @@ var ctrlNeuro = require('./controllers/CtrlNeuro');
 var ExpressConfigure = require('./config/ExpressConfig');
 var mongoose = require('mongoose');
 var mongooseConfig = require('./config/MongoConfig');
+var neuronApi = require('./data/NeuronApi/NeuronApi');
 var app = express();
 
 
 mongoose.connect(mongooseConfig.database);
 
 ExpressConfigure.configure(app, restThings, restAuth, restVoiceCommand, restCommands);
-//serialTest.fetchList();
 
 ctrlThings.initIo(cylon, {
     host: '0.0.0.0',
@@ -35,12 +33,17 @@ app.listen(app.get('port'), function(){
 
 
 //demo purpose
-/*
+
 var neuronModel = require('./models/NeuronSchemaModel');
 neuronModel.remove({}, function(err) {
     console.log('collection removed')
 });
-*/
+
+neuronApi.setCommand("open window", 'toggle', 'strob').then(function(s){
+//    console.log("s: " + s);
+//    neuronApi.getCommand("led open window").then(function(d){console.log(d)});
+});
+
 /*
 var userModel = require('./models/UserSchemaModel');
 userModel.remove({}, function(err) {

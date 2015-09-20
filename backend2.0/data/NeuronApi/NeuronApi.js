@@ -4,7 +4,7 @@ var neuron = require('../../models/NeuronSchemaModel');
 var q = require('q');
 
 
-var setCommand = function (phrase, command, thing) {
+var setCommand = function (phrase, trigger, thing) {
 
 
     var deferred = q.defer();
@@ -31,6 +31,7 @@ var setCommand = function (phrase, command, thing) {
                     if (e) {
                         deferred.resolve(null);
                     }
+                    console.log('saved...');
                     deferred.resolve(th);
                 });
 
@@ -42,16 +43,23 @@ var setCommand = function (phrase, command, thing) {
             });
 
 
-            if (_.result(_.find(th.classifier, {action: thing + " - " + command}), 'action') == null) {
+            if(_.chain(th.classifier).find({action: trigger}).result('action').value() == null){
+           // if (_.result(_.find(th.classifier, ), 'action') == null) {
 
                 console.log('new');
 
-                th.classifier.push({pattern: toRecognize.join(' '), action: thing + " - " + command});
-                neuron.findOne({_id: th._id}, saveDoc);
+                th.classifier.push({pattern: toRecognize.join(' '), action: trigger});
 
             } else {
-                deferred.resolve(null);
+
+                th.classifier = th.classifier.map(function(item){
+                    item.action == trigger ? item.pattern =  toRecognize.join(' ') : item;
+                });
+
+
             }
+
+            neuron.findOne({_id: th._id}, saveDoc);
 
             return th;
         });
@@ -62,17 +70,15 @@ var setCommand = function (phrase, command, thing) {
 var getCommand = function (phrase) {
 
     var lastDeffered = q.defer();
-
+console.log('in get');
     neuron.findOne(
         {"point": {"$in": _.words(phrase)}}
     ).exec().then(function (result) {
+            console.log('result: ' + result);
             if (result == null) {
                 lastDeffered.resolve(null);
             }
-            //console.log('step2');
-            console.log(result.classifier);
 
-            //result.classifier = natural.BayesClassifier.restore(JSON.parse(result.classifier));
             var classifierModel = new natural.BayesClassifier();
             result.classifier.forEach(function (item) {
                 console.log("item: " + item.pattern);
@@ -80,26 +86,24 @@ var getCommand = function (phrase) {
             });
 
 
-
             classifierModel.train();
-           // classifierModel.on('trainedWithDocument', function (obj) {
-             //   console.log(obj);
-                var cl = classifierModel.getClassifications(phrase);
-                console.log("cl: " + cl)
-                var b = false;
-                if (cl.length == 1)
+
+            var cl = classifierModel.getClassifications(phrase);
+            console.log("cl: " + cl)
+            var b = false;
+            if (cl.length == 1)
+                b = true;
+            for (var n = 1; n < cl.length; cl++) {
+                if (cl[n - 1].value != cl[n].value) {
                     b = true;
-                for (var n = 1; n < cl.length; cl++) {
-                    if (cl[n - 1].value != cl[n].value) {
-                        b = true;
-                        n = cl.length - 1;
-                    }
+                    n = cl.length - 1;
                 }
+            }
 
 
-                var s = b ? classifierModel.classify(phrase) : null;
-                console.log(s);
-                lastDeffered.resolve(s);
+            var s = b ? classifierModel.classify(phrase) : null;
+            console.log(s);
+            lastDeffered.resolve({trigger: s, thing: result.point});
 
         }, function (err) {
             lastDeffered.resolve(null);
@@ -111,19 +115,18 @@ var getCommand = function (phrase) {
 
 var getCommandsList = function () {
 
-    var deffered = q.defer();
+    var deferred = q.defer();
     neuron.find({point: {$ne: null}}).exec().then(function (data) {
-        console.log(data);
-        deffered.resolve(data);
+        deferred.resolve(data);
     }, function (err) {
         if (err) {
-            deffered.resolve([]);
+            deferred.resolve([]);
         }
     });
 
-    return deffered.promise;
+    return deferred.promise;
 }
-
+/*
 var modifyCommand = function (command) {
     console.log('step1');
     var deferred = q.defer();
@@ -146,17 +149,17 @@ var modifyCommand = function (command) {
 
     return deferred.promise;
 }
-
+*/
 //todo thing could be inited in configure interface only after add command
 //setCommand("mega demo", 'toggle', 'demo').then(function () {
 //    console.log('step2');
 //      getCommand("turn on led").then(function (action) {
-  //       console.log("action:" + action);
-  //   });
+//       console.log("action:" + action);
+//   });
 //});
 
 
 module.exports.setCommand = setCommand;
 module.exports.getCommand = getCommand;
-module.exports.modifyCommand = modifyCommand;
+//module.exports.modifyCommand = modifyCommand;
 module.exports.getCommandsList = getCommandsList;

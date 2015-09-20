@@ -148,6 +148,16 @@ html, body {
   height:32px;
   width:32px;
 }
+
+.mdl-demo section > .mdl-card > button.left {
+  position: absolute;
+  z-index: 99;
+  top: 8px;
+  left: 8px;
+  height:32px;
+  width:32px;
+}
+
 .mdl-demo section .section__circle {
   display: -webkit-box;
   display: -webkit-flex;

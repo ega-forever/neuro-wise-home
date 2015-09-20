@@ -8,7 +8,7 @@ angular.module('JsxFactory', [])
                 return <div>
                     {this.props.data.map(function (i) {
                         return (<Thing name={i.name} id={i.id} states={i.state} io={i.socketObj.io} scope={scope}
-                                       initialAttached={false}/>);
+                                       initialAttached={false} voice={i.voice}/>);
                     })
                     }</div>
             }
@@ -16,46 +16,110 @@ angular.module('JsxFactory', [])
 
         var Thing = React.createClass({
             getInitialState: function () {
-                return {attached: this.props.initialAttached}
+                return {attached: this.props.initialAttached, edit: false}
             },
+
             AttachThing: function (evt) {
                 this.setState({attached: !this.state.attached});
                 this.props.scope.AttachThing();
             },
 
+            EditThing: function (evt) {
+                this.setState({edit: true});
+                setTimeout(this.componentDidMount.bind(this), 50);
+            },
+
+            SaveVoiceThing: function (evt) {
+                this.setState({edit: false});
+                setTimeout(this.componentDidMount.bind(this), 50);
+                this.props.scope.SaveVoiceThing();//todo implement save in controller
+            },
+
             ChangeOption: function (option, evt) {
-                console.log(option);
                 var newState = !this.props.states[option];
-                console.log(this);
                 this.props.scope.ChangeOption(this.props, option, newState);
             },
 
+            changeAction: function (action, evt) {
+
+                if (this.props.newVoice == null) {
+                    this.props.newVoice = [{action: action, pattern: evt.target.value}];
+                } else if (_.chain(this.props.newVoice).find({action: action}).result('pattern').value() != null) {
+                    this.props.newVoice.forEach(function (t) {
+                        if (t.action == action) {
+                           t.pattern =  evt.target.value;
+                        }
+                    })
+                }else{
+                    this.props.newVoice.push({action: action, pattern: evt.target.value});
+                }
+            },
+
             componentDidMount: function () {
-                var id = this.props.id;
-                componentHandler.upgradeElements(document.getElementsByClassName('btn-' + id));
-                componentHandler.upgradeElement(document.getElementById('btn-' + id));
+                console.log(this.props);
+                if (!this.state.edit) {
+                    var id = this.props.id;
+                    componentHandler.upgradeElements(document.getElementsByClassName('btn-' + id));
+                    componentHandler.upgradeElement(document.getElementById('btn-' + id));
+                    componentHandler.upgradeElements(document.getElementsByClassName('btn-' + id + '-left'));
+                }
+
+                if (this.state.edit) {
+                    var name = this.props.name;
+                    componentHandler.upgradeElements(document.getElementsByClassName("edit-input-" + name));
+                }
             },
 
             render: function () {
                 var name = this.props.name;
                 var id = this.props.id;
                 var states = [];
-                console.log(this.props);
-                for (var i in this.props.states) {
-                    states.push(<li className="mdl-menu__item" onClick={this.ChangeOption.bind(this, i)}>
+                if (!this.state.edit) {
+                    for (var i in this.props.states) {
+                        states.push(<li className="mdl-menu__item" onClick={this.ChangeOption.bind(this, i)}>
                         <span data-badge=""
                               className={"mdl-badge " + (this.props.states[i] ? 'green' : 'red')}>{i.replace("State", "")}</span>
-                    </li>);
+                        </li>);
+                    }
+                } else if (this.state.edit) {
+
+                    for (var i in this.props.states) {
+                        states.push(<tr>
+                            <td className="initial-height">
+                                <div
+                                    className={"mdl-textfield mdl-js-textfield mdl-textfield--floating-label" + " edit-input-" + name}>
+                                    <input className="mdl-textfield__input" type="text"
+                                           onChange={this.changeAction.bind(this, i.replace("State", "")) }/>
+                                    <label className="mdl-textfield__label"
+                                           htmlFor="sample3">{i.replace("State", "")}: {_.chain(this.props.voice).find('action', i.replace("State", "")).result('pattern').value()}</label>
+                                </div>
+                            </td>
+                        </tr>);
+                    }
                 }
-                return (
+
+                var static = (
                     <section
                         className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp mdl-cell mdl-cell--6-col">
                         <div className="mdl-card mdl-cell mdl-cell--12-col">
+
+
                             <div className="mdl-card__supporting-text"><h4>{name} # {id}</h4> {name} 1 info...</div>
 
                             <div className="mdl-card__actions"><a href="#" className="mdl-button"
                                                                   onClick={this.AttachThing}>{this.state.attached ? 'Detach thing' : 'Attach thing'}</a>
                             </div>
+
+                            <button id={"btn-" + id + '-left'}
+                                    className="mdl-button mdl-js-button mdl-button--icon left">
+                                <i className="material-icons">more_vert</i>
+                            </button>
+
+                            <ul className={"mdl-menu mdl-js-menu mdl-menu--bottom-left " + 'btn-' + id + '-left'}
+                                htmlFor={"btn-" + id + '-left'}>
+                                <li className="mdl-menu__item" onClick={this.EditThing}>edit</li>
+                            </ul>
+
 
                             <button id={"btn-" + id}
                                     className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
@@ -65,9 +129,38 @@ angular.module('JsxFactory', [])
                                 className={"mdl-menu mdl-js-menu mdl-menu--bottom-right " + 'btn-' + id}>
                                 {states}
                             </ul>
+
+
                         </div>
                     </section>
                 );
+
+
+                var edit = (
+                    <section
+                        className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp mdl-cell mdl-cell--6-col">
+                        <div className="mdl-card mdl-cell mdl-cell--12-col">
+
+                            <div className="mdl-card__supporting-text"><h4>{name} # {id}</h4> {name} 1 info...</div>
+
+                            <table
+                                className="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+                                <tbody>
+                                {states}
+                                </tbody>
+                            </table>
+
+
+                            <div className="mdl-card__actions"><a href="#" className="mdl-button"
+                                                                  onClick={this.SaveVoiceThing}>Save thing</a>
+                            </div>
+
+
+                        </div>
+                    </section>
+                );
+
+                return this.state.edit ? edit : static;
             }
         });
 
