@@ -26,6 +26,7 @@ var config = function (app,  restThings, restAuth, restVoiceCommand, restCommand
     app.post('/rest-things', restThings.set);
     app.get('/rest-things', restThings.get);
     app.get('/rest-voice', restVoiceCommand.execute);
+    app.post('/rest-voice', restVoiceCommand.set);
     //app.get('/rest-commands', restCommands.get);
     //app.post('/rest-command', restCommands.set);
 

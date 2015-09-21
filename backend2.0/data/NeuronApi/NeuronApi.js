@@ -4,11 +4,14 @@ var neuron = require('../../models/NeuronSchemaModel');
 var q = require('q');
 
 
-var setCommand = function (phrase, trigger, thing) {
-
+var setCommand = function (commands, thing) {
 
     var deferred = q.defer();
 
+    if(commands == null || !_.isArray(commands)  || thing == null){
+        deferred.resolve([]);
+        return deferred.promise;
+    }
     neuron.findOneAndUpdate(
         {_point: thing},
         {"$setOnInsert": {point: thing}},
@@ -22,6 +25,7 @@ var setCommand = function (phrase, trigger, thing) {
             var saveDoc = function (err, res) {
 
 
+                console.log(res);
                 if (err) {
                     deferred.resolve(null);
                 }
@@ -37,27 +41,34 @@ var setCommand = function (phrase, trigger, thing) {
 
             };
 
+            _.pull(th.classifier, null);
 
-            tokenizer.tokenize(phrase).forEach(function (w) {
-                toRecognize.push(natural.PorterStemmer.stem(w));
-            });
-
-
-            if(_.chain(th.classifier).find({action: trigger}).result('action').value() == null){
-           // if (_.result(_.find(th.classifier, ), 'action') == null) {
-
-                console.log('new');
-
-                th.classifier.push({pattern: toRecognize.join(' '), action: trigger});
-
-            } else {
-
-                th.classifier = th.classifier.map(function(item){
-                    item.action == trigger ? item.pattern =  toRecognize.join(' ') : item;
+            commands.forEach(function (i) {
+                tokenizer.tokenize(i.pattern).forEach(function (w) {
+                    toRecognize.push(natural.PorterStemmer.stem(w));
                 });
 
 
-            }
+                if (_.chain(th.classifier).find({action: i.action}).result('action').value() == null) {
+                    // if (_.result(_.find(th.classifier, ), 'action') == null) {
+
+                    console.log('new');
+
+                    th.classifier.push({pattern: toRecognize.join(' '), action: i.action});
+
+                } else {
+                    console.log('update');
+                    console.log(th.classifier);
+                    th.classifier = th.classifier.map(function (item) {
+                        item.action == i.action ? item.pattern = toRecognize.join(' ') : item;
+                    });
+
+console.log('update2');
+                }
+
+            });
+
+            console.log('update3');
 
             neuron.findOne({_id: th._id}, saveDoc);
 
@@ -70,7 +81,7 @@ var setCommand = function (phrase, trigger, thing) {
 var getCommand = function (phrase) {
 
     var lastDeffered = q.defer();
-console.log('in get');
+    console.log('in get');
     neuron.findOne(
         {"point": {"$in": _.words(phrase)}}
     ).exec().then(function (result) {
@@ -127,29 +138,29 @@ var getCommandsList = function () {
     return deferred.promise;
 }
 /*
-var modifyCommand = function (command) {
-    console.log('step1');
-    var deferred = q.defer();
-    neuron.findOne({_id: command._id}).exec().then(function (data) {
-        console.log('step2');
-        data.classifier = command.classifier;
-        data.save(function (err) {
-            console.log('step3');
-            if (err) {
-                deferred.resolve('err');
-            } else {
-                deferred.resolve('ok');
-            }
-        });
-    }, function (err) {
-        if (err) {
-            deferred.resolve('err');
-        }
-    });
+ var modifyCommand = function (command) {
+ console.log('step1');
+ var deferred = q.defer();
+ neuron.findOne({_id: command._id}).exec().then(function (data) {
+ console.log('step2');
+ data.classifier = command.classifier;
+ data.save(function (err) {
+ console.log('step3');
+ if (err) {
+ deferred.resolve('err');
+ } else {
+ deferred.resolve('ok');
+ }
+ });
+ }, function (err) {
+ if (err) {
+ deferred.resolve('err');
+ }
+ });
 
-    return deferred.promise;
-}
-*/
+ return deferred.promise;
+ }
+ */
 //todo thing could be inited in configure interface only after add command
 //setCommand("mega demo", 'toggle', 'demo').then(function () {
 //    console.log('step2');

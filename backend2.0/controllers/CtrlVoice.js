@@ -36,6 +36,11 @@ var getVoiceCommands = function () {
     return neuronApi.getCommandsList();
 }
 
+var setVoiceCommand = function (actions, thing) {
+    return neuronApi.setCommand(actions, thing);
+}
+
 
 module.exports.executeVoiceCommand = executeVoiceCommand;
 module.exports.getVoiceCommands = getVoiceCommands;
+module.exports.setVoiceCommand = setVoiceCommand;

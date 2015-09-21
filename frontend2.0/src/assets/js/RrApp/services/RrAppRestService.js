@@ -17,6 +17,15 @@ angular.module('RrAppRestService', [])
                             return data;
                         });
                 }
+            },
+            updateVoiceCommand: function (voiceCommands, thing) {
+                {
+                    return $http.post('http://localhost:9000/rest-voice',  {headers: {'x-access-token' : $localStorage.token},
+                        commands: voiceCommands, thing:thing})
+                        .success(function (data) {
+                            return data;
+                        });
+                }
             }
         };
 

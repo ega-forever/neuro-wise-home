@@ -35,12 +35,12 @@ app.listen(app.get('port'), function(){
 //demo purpose
 
 var neuronModel = require('./models/NeuronSchemaModel');
-neuronModel.remove({}, function(err) {
-    console.log('collection removed')
-});
+//neuronModel.remove({}, function(err) {
+//    console.log('collection removed')
+//});
 
-neuronApi.setCommand("open window", 'toggle', 'strob').then(function(s){
-//    console.log("s: " + s);
+neuronApi.setCommand([{pattern: "open window", action: 'toggle'}], 'strob').then(function(s){
+    console.log("s: " + s);
 //    neuronApi.getCommand("led open window").then(function(d){console.log(d)});
 });
 

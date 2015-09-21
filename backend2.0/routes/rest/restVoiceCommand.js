@@ -13,4 +13,19 @@ var execute = function (req, res) {
 
 };
 
+
+var setVoiceCommand = function(req, res){
+
+    CtrlAuth.userAuthCtrlCheker(req.headers['x-access-token']).then(function (user) {
+        CtrlVoice.setVoiceCommand(req.body.commands, req.body.thing).then(function (d) {
+
+            res.send(JSON.stringify(d));
+        })
+
+    });
+
+};
+
 module.exports.execute = execute;
+module.exports.set = setVoiceCommand;
+

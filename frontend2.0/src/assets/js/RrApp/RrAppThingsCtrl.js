@@ -28,8 +28,15 @@ angular.module('RrAppThingsCtrl', [])
         }
 
 
-        _this.SaveVoiceThing = function () {
-            alert('super');
+        _this.SaveVoiceThing = function (thing, voice) {
+            console.log(voice);
+            var deferred = Q.defer();
+
+            restService.updateVoiceCommand(voice, thing).then(function (i) {
+                console.log(i);
+                deferred.resolve(true);
+            });
+            return deferred.promise;
         }
 
         _this.ChangeOption = function (thing, option, newState) {

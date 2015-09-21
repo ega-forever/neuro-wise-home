@@ -30,9 +30,16 @@ angular.module('JsxFactory', [])
             },
 
             SaveVoiceThing: function (evt) {
-                this.setState({edit: false});
-                setTimeout(this.componentDidMount.bind(this), 50);
-                this.props.scope.SaveVoiceThing();//todo implement save in controller
+                var _this = this;
+                this.props.scope.SaveVoiceThing(this.props.name, this.props.newVoice).then(function(state){
+                    if(state){
+                        _this.props.voice.forEach(function(v){
+                            v.pattern = _.chain(_this.props.newVoice).find({action: v.action}).result('pattern').value();
+                        });
+                        _this.setState({edit: false});
+                        setTimeout(_this.componentDidMount.bind(_this), 50);
+                    }
+                });
             },
 
             ChangeOption: function (option, evt) {
