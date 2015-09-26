@@ -4,7 +4,7 @@ var CtrlAuth = require('../../controllers/CtrlAuth');
 var execute = function (req, res) {
     CtrlAuth.userAuthCtrlCheker(req.headers['x-access-token']).then(function (user) {
 
-        CtrlVoice.executeVoiceCommand(user, req.query.command).then(function (d) {
+        CtrlVoice.executeVoiceCommand(user, req.query.thing, req.query.command).then(function (d) {
 
             res.send(JSON.stringify(d));
         })

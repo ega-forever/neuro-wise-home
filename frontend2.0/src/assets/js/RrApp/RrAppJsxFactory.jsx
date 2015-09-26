@@ -31,11 +31,14 @@ angular.module('JsxFactory', [])
 
             SaveVoiceThing: function (evt) {
                 var _this = this;
-                this.props.scope.SaveVoiceThing(this.props.name, this.props.newVoice).then(function(state){
-                    if(state){
-                        _this.props.voice.forEach(function(v){
-                            v.pattern = _.chain(_this.props.newVoice).find({action: v.action}).result('pattern').value();
+                this.props.scope.SaveVoiceThing(this.props.name, this.props.newVoice).then(function (state) {
+                    if (state) {
+                        _this.props.voice.forEach(function (v) {
+                            if (v != null && v.action != null) {
+                                v.pattern = _.chain(_this.props.newVoice).find({action: v.action}).result('pattern').value();
+                            }
                         });
+                        alert();
                         _this.setState({edit: false});
                         setTimeout(_this.componentDidMount.bind(_this), 50);
                     }
@@ -54,10 +57,10 @@ angular.module('JsxFactory', [])
                 } else if (_.chain(this.props.newVoice).find({action: action}).result('pattern').value() != null) {
                     this.props.newVoice.forEach(function (t) {
                         if (t.action == action) {
-                           t.pattern =  evt.target.value;
+                            t.pattern = evt.target.value;
                         }
                     })
-                }else{
+                } else {
                     this.props.newVoice.push({action: action, pattern: evt.target.value});
                 }
             },

@@ -39,10 +39,7 @@ var neuronModel = require('./models/NeuronSchemaModel');
 //    console.log('collection removed')
 //});
 
-neuronApi.setCommand([{pattern: "open window", action: 'toggle'}], 'strob').then(function(s){
-    console.log("s: " + s);
-//    neuronApi.getCommand("led open window").then(function(d){console.log(d)});
-});
+
 
 /*
 var userModel = require('./models/UserSchemaModel');

@@ -53,6 +53,7 @@ html(lang='en', ng-app="RrApp")
         script(src='js/RrApp/RrAppMainCtrl.js')
         script(src='js/RrApp/RrAppAuthCtrl.js')
         script(src='js/RrApp/RrAppWNetCtrl.js')
+        script(src='js/RrApp/RrAppVoiceCtrl.js')
         script(src='js/RrApp/services/RrAppRestService.js')
         script(src='js/RrApp.js')
 
@@ -197,7 +198,7 @@ html(lang='en', ng-app="RrApp")
                                 a(href='#') Help
                             li
                                 a(href='#') Privacy and Terms
-        a#view-source.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored.mdl-shadow--4dp.mdl-color--accent
+        a(ng-controller="voiceCtrl", ng-click="execute()")#view-source.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored.mdl-shadow--4dp.mdl-color--accent
             i.material-icons(role='presentation') micro
             span.visuallyhidden micro
         script(src='js/mdl/material.min.js')

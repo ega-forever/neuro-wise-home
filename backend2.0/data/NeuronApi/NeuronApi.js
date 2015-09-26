@@ -2,13 +2,14 @@ var _ = require('lodash');
 var natural = require('natural');
 var neuron = require('../../models/NeuronSchemaModel');
 var q = require('q');
+var wordnet = new natural.WordNet();
 
 
 var setCommand = function (commands, thing) {
 
     var deferred = q.defer();
 
-    if(commands == null || !_.isArray(commands)  || thing == null){
+    if (commands == null || !_.isArray(commands) || thing == null) {
         deferred.resolve([]);
         return deferred.promise;
     }
@@ -31,6 +32,7 @@ var setCommand = function (commands, thing) {
                 }
 
                 res.classifier = th.classifier;
+                console.log(res.classifier);
                 res.save(function (e) {
                     if (e) {
                         deferred.resolve(null);
@@ -40,37 +42,63 @@ var setCommand = function (commands, thing) {
                 });
 
             };
+            var synonyms = function (w) {
+                var deferred = q.defer();
 
-            _.pull(th.classifier, null);
+                wordnet.lookup(w, function (results) {
 
-            commands.forEach(function (i) {
-                tokenizer.tokenize(i.pattern).forEach(function (w) {
-                    toRecognize.push(natural.PorterStemmer.stem(w));
+                    var n = _.chain(results).thru(function (a) {
+                        var s = a[0].synonyms;
+                        for (var i = 1; i < a.length; i++) {
+                            if (a[i].pos == 'v')
+                                s = _.merge(s, a[i].synonyms);
+                        }
+                        return s;
+                    }).uniq().map(function(f){
+                        return f.replace("_", " ");
+                    }).value();
+
+                    deferred.resolve(n);
+
                 });
+                return deferred.promise;
+            }
+            var modifier = function () {
 
-
-                if (_.chain(th.classifier).find({action: i.action}).result('action').value() == null) {
-                    // if (_.result(_.find(th.classifier, ), 'action') == null) {
-
-                    console.log('new');
-
-                    th.classifier.push({pattern: toRecognize.join(' '), action: i.action});
-
-                } else {
-                    console.log('update');
-                    console.log(th.classifier);
-                    th.classifier = th.classifier.map(function (item) {
-                        item.action == i.action ? item.pattern = toRecognize.join(' ') : item;
+                var deferred = q.defer();
+                commands.forEach(function (i, s) {
+                    tokenizer.tokenize(i.pattern).forEach(function (w) {
+                        toRecognize.push(natural.PorterStemmer.stem(w));
                     });
 
-console.log('update2');
-                }
 
+
+                    synonyms(i.pattern).then(function (synonyms) {
+                        var inQueue = s;
+                        if (_.chain(th.classifier).find({action: i.action}).result('action').value() == null) {
+
+                            console.log('new');
+                            th.classifier.push({pattern: toRecognize.join(' '), action: i.action, synonyms: synonyms});
+
+                        } else {
+                            console.log('update');
+                            console.log(th.classifier);
+                            th.classifier.map(function (item) {
+                                item.action == i.action ? (item.pattern = toRecognize.join(' '), item.synonyms = synonyms) : item;
+                            });
+
+                        }
+                        if (inQueue == commands.length - 1) {
+                            deferred.resolve(th);
+                        }
+                    });
+                });
+                return deferred.promise;
+            }
+
+            modifier().then(function (td) {
+                neuron.findOne({_id: td._id}, saveDoc);
             });
-
-            console.log('update3');
-
-            neuron.findOne({_id: th._id}, saveDoc);
 
             return th;
         });
@@ -78,29 +106,37 @@ console.log('update2');
     return deferred.promise;
 }
 
-var getCommand = function (phrase) {
+var getCommand = function (thing, phrase) {
 
-    var lastDeffered = q.defer();
+    var lastDeferred = q.defer();
     console.log('in get');
+
+    if (thing == null || phrase == null) {
+        lastDeferred.resolve([]);
+        return lastDeferred.promise;
+    }
+
     neuron.findOne(
-        {"point": {"$in": _.words(phrase)}}
+        {"point": thing}
     ).exec().then(function (result) {
-            console.log('result: ' + result);
+
             if (result == null) {
-                lastDeffered.resolve(null);
+                lastDeferred.resolve(null);
             }
 
             var classifierModel = new natural.BayesClassifier();
             result.classifier.forEach(function (item) {
-                console.log("item: " + item.pattern);
                 classifierModel.addDocument(item.pattern, item.action);
+                if(item.synonyms != null &&  _.isArray(item.synonyms)){
+                    item.synonyms.forEach(function(j){
+                        classifierModel.addDocument(j, item.action);
+                    });
+                }
             });
-
 
             classifierModel.train();
 
             var cl = classifierModel.getClassifications(phrase);
-            console.log("cl: " + cl)
             var b = false;
             if (cl.length == 1)
                 b = true;
@@ -113,14 +149,13 @@ var getCommand = function (phrase) {
 
 
             var s = b ? classifierModel.classify(phrase) : null;
-            console.log(s);
-            lastDeffered.resolve({trigger: s, thing: result.point});
+            lastDeferred.resolve({trigger: s, thing: result.point});
 
         }, function (err) {
-            lastDeffered.resolve(null);
+            lastDeferred.resolve(null);
         });
 
-    return lastDeffered.promise;
+    return lastDeferred.promise;
 
 }
 
@@ -137,40 +172,8 @@ var getCommandsList = function () {
 
     return deferred.promise;
 }
-/*
- var modifyCommand = function (command) {
- console.log('step1');
- var deferred = q.defer();
- neuron.findOne({_id: command._id}).exec().then(function (data) {
- console.log('step2');
- data.classifier = command.classifier;
- data.save(function (err) {
- console.log('step3');
- if (err) {
- deferred.resolve('err');
- } else {
- deferred.resolve('ok');
- }
- });
- }, function (err) {
- if (err) {
- deferred.resolve('err');
- }
- });
-
- return deferred.promise;
- }
- */
-//todo thing could be inited in configure interface only after add command
-//setCommand("mega demo", 'toggle', 'demo').then(function () {
-//    console.log('step2');
-//      getCommand("turn on led").then(function (action) {
-//       console.log("action:" + action);
-//   });
-//});
 
 
 module.exports.setCommand = setCommand;
 module.exports.getCommand = getCommand;
-//module.exports.modifyCommand = modifyCommand;
 module.exports.getCommandsList = getCommandsList;

@@ -1,9 +1,8 @@
 var Q = require('q');
 var neuronApi = require('../data/NeuronApi/NeuronApi');
 var ctrlThings = require('./CtrlThings');
-var executeVoiceCommand = function (user, command) {
+var executeVoiceCommand = function (user, thing,  command) {
 
-    console.log(command);
     console.log(user);
     return function () {
         var deferred = Q.defer();
@@ -14,13 +13,11 @@ var executeVoiceCommand = function (user, command) {
         }
 
 
-        neuronApi.getCommand(command).then(function (data) {
+        neuronApi.getCommand(thing, command).then(function (data) {
 
             if (data == null) {
                 deferred.resolve([]);
             }
-
-            console.log('label: ' + data);
 
             deferred.resolve(data);
         });
