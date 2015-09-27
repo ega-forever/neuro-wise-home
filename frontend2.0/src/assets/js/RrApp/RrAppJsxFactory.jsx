@@ -38,7 +38,6 @@ angular.module('JsxFactory', [])
                                 v.pattern = _.chain(_this.props.newVoice).find({action: v.action}).result('pattern').value();
                             }
                         });
-                        alert();
                         _this.setState({edit: false});
                         setTimeout(_this.componentDidMount.bind(_this), 50);
                     }

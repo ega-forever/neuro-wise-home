@@ -5,6 +5,8 @@ var ctrlAuth = require('../controllers/CtrlAuth');
 var q = require('q');
 var _ = require('lodash');
 var io = require('socket.io');
+var CMUDict = require('cmudict').CMUDict;
+var cmudict = new CMUDict();
 //var serialPort = require("serialport");
 var ThingsConfigured = require('../config/ThingsConfig');
 
@@ -25,6 +27,7 @@ var getThings = function (user) {
 
             commands.forEach(function (i) {
                 t.state == null ? (t.state = {}, t.state[i + "State"] = false) : t.state[i + "State"] == null ? t.state[i + "State"] = false : t.state[i + "State"];
+                t.phoneme =  cmudict.get(t.name);
             });
 
             return t;

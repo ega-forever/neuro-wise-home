@@ -1,5 +1,5 @@
 angular.module('RrAppThingsCtrl', [])
-    .controller('thingsCtrl', function (JsxThingsFactory, $scope, restService, $localStorage) {
+    .controller('thingsCtrl', function (JsxThingsFactory, $scope, restService, $localStorage, voiceStorageService) {
         var _this = $scope;
         // var data = [{name: 'super!!!', id: 1237}, {name: 'super2', id : 54}];//test
         var socket = io('http://localhost:9002/auth');//todo pass to socket factory for auth login-logout handle
@@ -9,6 +9,7 @@ angular.module('RrAppThingsCtrl', [])
                 console.log('authed...');
                 restService.getThings().then(function (d) {
                     console.log(d);
+                    voiceStorageService.setThings(d.data);
 
                     d.data.map(function (th) {
                         th.socketObj = {io: io('http://localhost:9001/api/robots/' + th.name)};
