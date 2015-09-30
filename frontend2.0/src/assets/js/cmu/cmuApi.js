@@ -71,11 +71,10 @@ function cmuApi() {
                             if (clb){ clb(data)};
                         }
                         if (e.data.hasOwnProperty('hyp')) {
-                            console.log(e.data);
-                            if (e.data.hyp.length > 0) {
+                            if (e.data.hyp.split(" ").length > 1) {
                                 console.log('resolved');
                                 recorder.stop();
-                                deferred.resolve(e.data.hyp);
+                                deferred.resolve(e.data.hyp.split(" ")[1]);
 
                             }
 

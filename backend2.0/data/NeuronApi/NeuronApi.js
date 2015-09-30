@@ -45,10 +45,13 @@ var setCommand = function (commands, thing) {
             var synonyms = function (w) {
                 var deferred = q.defer();
 
+
                 wordnet.lookup(w, function (results) {
+                    console.log(results);
 
                     var n = _.chain(results).thru(function (a) {
-                        var s = a[0].synonyms;
+                        var s = a == null || a.length < 1 || a[0].synonyms == null ? [] : a[0].synonyms;
+                        console.log(s);
                         for (var i = 1; i < a.length; i++) {
                             if (a[i].pos == 'v')
                                 s = _.merge(s, a[i].synonyms);
