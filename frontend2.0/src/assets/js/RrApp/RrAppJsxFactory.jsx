@@ -228,21 +228,29 @@ angular.module('JsxFactory', [])
                 this.props.pass = ev.target.value;
             },
 
+
+            componentDidMount: function () {
+
+                var authDom = document.getElementsByClassName('auth').item();
+                componentHandler.upgradeElements(authDom.getElementsByClassName('username'));
+                componentHandler.upgradeElements(authDom.getElementsByClassName('password'));
+
+            },
+
+
             render: function () {
-                //var name = this.props.name;
-                //var pass = this.props.id;
 
                 return (
                     <section className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp square-card">
-                        <div className="mdl-card mdl-cell mdl-cell--12-col">
+                        <div className="mdl-card mdl-cell mdl-cell--12-col auth">
                             <div className="mdl-card__supporting-text"><h4>Login</h4> with your username and pass</div>
-                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label username">
                                 <input className="mdl-textfield__input" type="text" onChange={this.setUserName}/>
-                                <label className="mdl-textfield__label" htmlFor="sample3">Username...</label>
+                                <label className="mdl-textfield__label" username="username">Username...</label>
                             </div>
-                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label password">
                                 <input className="mdl-textfield__input" type="text" onChange={this.setPassword}/>
-                                <label className="mdl-textfield__label" htmlFor="sample3">Password...</label>
+                                <label className="mdl-textfield__label" htmlFor="password">Password...</label>
                             </div>
                             <div className="mdl-card__actions"><a href="#" className="mdl-button" onClick={this.login}>Login</a>
                             </div>

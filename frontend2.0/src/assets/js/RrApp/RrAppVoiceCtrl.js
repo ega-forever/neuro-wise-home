@@ -1,9 +1,9 @@
 angular.module('RrAppVoiceCtrl', [])
-    .controller('voiceCtrl', function ($scope, $localStorage, restService, voiceStorageService) {
+    .controller('voiceCtrl', function ($scope, $localStorage, restService, voiceStorageService, socketService) {
         var _this = $scope;
 
 
-        var socket = io('http://localhost:9002/auth');//todo pass to socket factory for auth login-logout handle
+        var socket = socketService.getAuthIo();
 
         var wordList = [];
 
@@ -47,7 +47,7 @@ angular.module('RrAppVoiceCtrl', [])
                             socket.emit('authIo', {token: $localStorage.token});
                         });
                         thing.socketObj.io.emit(d.data.trigger);
-                        
+
                     });
                 }
 

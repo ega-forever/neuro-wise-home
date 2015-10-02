@@ -1,5 +1,5 @@
 angular.module('RrAppAuthCtrl', [])
-    .controller('authCtrl', function (JsxAuthFactory, $scope, restService, $localStorage) {
+    .controller('authCtrl', function (JsxAuthFactory, $scope, restService, $localStorage, socketService, JsxThingsFactory) {
         var _this = $scope;
 
         _this.storage = $localStorage;
@@ -8,7 +8,7 @@ angular.module('RrAppAuthCtrl', [])
                 $localStorage.token = d.data.token;
                 $localStorage.username = d.data.username;
                 JsxAuthFactory.LogoutRender(d.data, _this);
-
+                 socketService.getAuthIo().emit('authIo', {token: $localStorage.token});
             });
         }
 
@@ -16,6 +16,8 @@ angular.module('RrAppAuthCtrl', [])
             $localStorage.$reset();
             $scope.$apply();
             JsxAuthFactory.LoginRender({}, _this);
+            JsxThingsFactory.thingsRender([], _this);
+
         }
 
 

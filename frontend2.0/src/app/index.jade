@@ -21,8 +21,8 @@ html(lang='en', ng-app="RrApp")
         // SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones
         //
           <link rel="canonical" href="http://www.example.com/">
-        link(href='https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&lang=en', rel='stylesheet')
-        link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
+        link(href='css/mdl/css/fonts-text.css', rel='stylesheet')
+        link(href='css/mdl/css/fonts-icons-material.css', rel='stylesheet')
         link(rel='stylesheet', href='css/custom.css')
         link(rel='stylesheet', href='css/mdl/css/material.min.css')
         link(rel='stylesheet', href='css/styles.css')
@@ -50,7 +50,7 @@ html(lang='en', ng-app="RrApp")
         script(src='js/angular/angular.js')
         script(src='js/angular/angular-route.js')
         script(src='js/angular/ngStorage.min.js')
-        script(src='https://cdn.socket.io/socket.io-1.2.0.js')
+        script(src='js/socketIo/socket.io-1.2.0.js')
         //script(type="text/jsx" src='js/things/things.jsx')
         script(src='js/RrApp/RrAppJsxFactory.js')
         script(src='js/RrApp/RrAppThingsCtrl.js')
@@ -60,6 +60,7 @@ html(lang='en', ng-app="RrApp")
         script(src='js/RrApp/RrAppVoiceCtrl.js')
         script(src='js/RrApp/services/RrAppRestService.js')
         script(src='js/RrApp/services/RrAppVoiceStorageService.js')
+        script(src='js/RrApp/services/RrAppSocketService.js')
         script(src='js/RrApp.js')
 
 

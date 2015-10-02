@@ -1,10 +1,8 @@
 angular.module('RrAppThingsCtrl', [])
-    .controller('thingsCtrl', function (JsxThingsFactory, $scope, restService, $localStorage, voiceStorageService) {
+    .controller('thingsCtrl', function (JsxThingsFactory, $scope, restService, $localStorage, voiceStorageService,socketService) {
         var _this = $scope;
-        // var data = [{name: 'super!!!', id: 1237}, {name: 'super2', id : 54}];//test
-        var socket = io('http://localhost:9002/auth');//todo pass to socket factory for auth login-logout handle
+        var socket = socketService.getAuthIo();
 
-        if ($localStorage.token) {
             socket.on('ok', function () {
                 console.log('authed...');
                 restService.getThings().then(function (d) {
@@ -12,15 +10,17 @@ angular.module('RrAppThingsCtrl', [])
                     voiceStorageService.setThings(d.data);
 
                     d.data.map(function (th) {
-                        th.socketObj = {io: io('http://localhost:9001/api/robots/' + th.name)};
+                        th.socketObj = {io: socketService.getThingIo(th.name)};
                     })
 
                     JsxThingsFactory.thingsRender(d.data, _this);
                 })
             });
-        } else {
+
+        if ($localStorage.token == null) {
             JsxThingsFactory.thingsRender([], _this);
         }
+
 
         socket.emit('authIo', {token: $localStorage.token});
 

@@ -122,6 +122,9 @@ var thingsIo = function (cylon, io) {
 
         events.on("authed", function (user) {
 
+            if(user == null){
+                return;
+            }
             setThings(user, ThingsConfigured, "addAll").then(function () {
 
                 user.things = _.reject(ThingsConfigured, function (t) {
