@@ -67,8 +67,13 @@ function cmuApi() {
                         if (e.data.hasOwnProperty('id')) {
                             var clb = callbackManager.get(e.data['id']);
                             var data = {};
-                            if (e.data.hasOwnProperty('data')){ data = e.data.data;}
-                            if (clb){ clb(data)};
+                            if (e.data.hasOwnProperty('data')) {
+                                data = e.data.data;
+                            }
+                            if (clb) {
+                                clb(data)
+                            }
+
                         }
                         if (e.data.hasOwnProperty('hyp')) {
                             if (e.data.hyp.split(" ").length > 1) {
@@ -80,7 +85,7 @@ function cmuApi() {
 
                         }
                         if (e.data.hasOwnProperty('status') && (e.data.status == "error")) {
-console.log(e.data);
+                            console.log(e.data);
                         }
                     };
                     // Once the worker is fully loaded, we can call the initialize function

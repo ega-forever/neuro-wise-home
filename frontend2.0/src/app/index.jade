@@ -20,25 +20,15 @@ html(lang='en', ng-app="RrApp")
         meta(name='msapplication-TileColor', content='#3372DF')
         // SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones
         //
-          <link rel="canonical" href="http://www.example.com/">
-        link(href='css/mdl/css/fonts-text.css', rel='stylesheet')
-        link(href='css/mdl/css/fonts-icons-material.css', rel='stylesheet')
+
+        link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en')
+        link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
+
+        link(rel='stylesheet', href='css/styles-mdl.css')
         link(rel='stylesheet', href='css/custom.css')
         link(rel='stylesheet', href='css/mdl/css/material.min.css')
         link(rel='stylesheet', href='css/styles.css')
-        style.
-            #view-source {
-                position: fixed;
-                display: block;
-                right: 0;
-                bottom: 0;
-                margin-right: 40px;
-                margin-bottom: 40px;
-                z-index: 900;
-            }
-            #things section{
-                display:inline-block;
-            }
+
         script(src='js/react/react.js')
         script(src='js/lodash/lodash.js')
         script(src='js/q/q.js')
@@ -46,15 +36,13 @@ html(lang='en', ng-app="RrApp")
         script(src='js/cmu/callbackManager.js')
         script(src='js/cmu/recognizer.js')
         script(src='js/cmu/cmuApi.js')
-        //script(src='js/react/JSXTransformer.js')
         script(src='js/angular/angular.js')
         script(src='js/angular/angular-route.js')
         script(src='js/angular/ngStorage.min.js')
         script(src='js/socketIo/socket.io-1.2.0.js')
-        //script(type="text/jsx" src='js/things/things.jsx')
         script(src='js/RrApp/RrAppJsxFactory.js')
         script(src='js/RrApp/RrAppThingsCtrl.js')
-        script(src='js/RrApp/RrAppMainCtrl.js')
+        script(src='js/RrApp/RrAppMenuCtrl.js')
         script(src='js/RrApp/RrAppAuthCtrl.js')
         script(src='js/RrApp/RrAppWNetCtrl.js')
         script(src='js/RrApp/RrAppVoiceCtrl.js')
@@ -65,147 +53,86 @@ html(lang='en', ng-app="RrApp")
 
 
 
-    body.mdl-demo.mdl-color--grey-100.mdl-color-text--grey-700.mdl-base
-        .mdl-layout.mdl-js-layout.mdl-layout--fixed-header
-            header.mdl-layout__header.mdl-layout__header--scroll.mdl-color--primary
-                .mdl-layout--large-screen-only.mdl-layout__header-row
-                .mdl-layout--large-screen-only.mdl-layout__header-row
-                    h3 RedRow
-                .mdl-layout--large-screen-only.mdl-layout__header-row
-                .mdl-layout__tab-bar.mdl-js-ripple-effect.mdl-color--primary-dark
-                    a.mdl-layout__tab.is-active(href='#overview') Overview
-                    a.mdl-layout__tab(href='#wNet') Wise Network
-                    a.mdl-layout__tab(href='#things') Things
-                    a.mdl-layout__tab(href='#auth', ng-controller="authCtrl") {{storage.username || 'Login'}}
+    body
+        .demo-layout.mdl-layout.mdl-js-layout.mdl-layout--fixed-drawer.mdl-layout--fixed-header
+            header.demo-header.mdl-layout__header.mdl-color--white.mdl-color--grey-100.mdl-color-text--grey-600
+                .mdl-layout__header-row
+                    span.mdl-layout-title Home
 
-            main.mdl-layout__content
+                    .mdl-layout-spacer
+
+                    .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable
+                        label.mdl-button.mdl-js-button.mdl-button--icon(for='search')
+                            i.material-icons search
+
+                        .mdl-textfield__expandable-holder
+                            input#search.mdl-textfield__input(type='text')
+
+                            label.mdl-textfield__label(for='search') Enter your query...
+
+                    button#hdrbtn.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--icon
+                        i.material-icons more_vert
+
+                    ul.mdl-menu.mdl-js-menu.mdl-js-ripple-effect.mdl-menu--bottom-right(for='hdrbtn', ng-controller="menuCtrl")
+
+                        li.mdl-menu__item.mdl-menu_manipulate(href='#auth', ng-controller="authCtrl") {{storage.username || 'Login'}}
+
+                        li.mdl-menu__item.mdl-menu_manipulate(href='#things') Things
+
+                        li.mdl-menu__item.mdl-menu_manipulate About
 
 
 
-                #overview.mdl-layout__tab-panel.is-active
-                    section.section--center.mdl-grid.mdl-grid--no-spacing.mdl-shadow--2dp
-                        .mdl-card.mdl-cell.mdl-cell--12-col
-                            .mdl-card__supporting-text.mdl-grid.mdl-grid--no-spacing
-                                h4.mdl-cell.mdl-cell--12-col Details
-                                .section__circle-container.mdl-cell.mdl-cell--2-col.mdl-cell--1-col-phone
-                                    .section__circle-container__circle.mdl-color--primary
-                                .section__text.mdl-cell.mdl-cell--10-col-desktop.mdl-cell--6-col-tablet.mdl-cell--3-col-phone
-                                    h5 Lorem ipsum dolor sit amet
-                                    |                   Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis
-                                    a(href='#') proident minim
-                                    | .
-                                .section__circle-container.mdl-cell.mdl-cell--2-col.mdl-cell--1-col-phone
-                                    .section__circle-container__circle.mdl-color--primary
-                                .section__text.mdl-cell.mdl-cell--10-col-desktop.mdl-cell--6-col-tablet.mdl-cell--3-col-phone
-                                    h5 Lorem ipsum dolor sit amet
-                                    |                   Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis
-                                    a(href='#') proident minim
-                                    | .
-                                .section__circle-container.mdl-cell.mdl-cell--2-col.mdl-cell--1-col-phone
-                                    .section__circle-container__circle.mdl-color--primary
-                                .section__text.mdl-cell.mdl-cell--10-col-desktop.mdl-cell--6-col-tablet.mdl-cell--3-col-phone
-                                    h5 Lorem ipsum dolor sit amet
-                                    |                   Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis
-                                    a(href='#') proident minim
-                                    | .
-                            .mdl-card__actions
-                                a.mdl-button(href='#') Read our features
-                        button#btn2.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--icon
-                            i.material-icons more_vert
-                        ul.mdl-menu.mdl-js-menu.mdl-menu--bottom-right(for='btn2')
-                            li.mdl-menu__item Lorem
-                            li.mdl-menu__item(disabled='') Ipsum
-                            li.mdl-menu__item Dolor
+            .demo-drawer.mdl-layout__drawer.mdl-color--blue-grey-900.mdl-color-text--blue-grey-50
+                header.demo-drawer-header
+                    //img.demo-avatar(src='images/user.jpg')
 
-                #wNet.mdl-layout__tab-panel(ng-controller="wNetCtrl")
-                    //section.section--center.mdl-grid.mdl-grid--no-spacing.mdl-shadow--2dp
-                        header.section__play-btn.mdl-cell.mdl-cell--3-col-desktop.mdl-cell--2-col-tablet.mdl-cell--4-col-phone.mdl-color--teal-100.mdl-color-text--white
-                            i.material-icons play_circle_filled
-                        .mdl-card.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--6-col-tablet.mdl-cell--4-col-phone
-                            .mdl-card__supporting-text
-                                h4 Status
+                    .demo-avatar-dropdown
+                        span hello@example.com
 
-                            .demo-charts.mdl-color--white.mdl-shadow--2dp.mdl-cell.mdl-cell--12-col.mdl-grid
-                                .attention(style="width:100%")
-                                    p meditation:&nbsp
-                                        strong 78%
-                                .meditation(style="width:100%")
-                                    p attention:&nbsp
-                                        strong 32%
+                        .mdl-layout-spacer
+
+                        button#accbtn.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--icon
+                            i.material-icons(role='presentation') arrow_drop_down
+
+                            span.visuallyhidden Accounts
+
+                        ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect(for='accbtn')
+                            li.mdl-menu__item hello@example.com
+
+                            li.mdl-menu__item info@example.com
+
+                            li.mdl-menu__item
+                                i.material-icons add
+                                | Add another account...
+
+                nav.demo-navigation.mdl-navigation.mdl-color--blue-grey-800
+                    a.mdl-navigation__link(href='')
+                        i.mdl-color-text--blue-grey-400.material-icons(role='presentation') home
+                        | Home
+
+            main.mdl-layout__content.mdl-color--grey-100.mdl-demo
+
+
+                //#wNet.mdl-grid.demo-content(ng-controller="wNetCtrl")
                     #wNetSet
 
 
-                #things.mdl-layout__tab-panel(ng-controller="thingsCtrl")
+                #things.mdl-grid.demo-content(ng-controller="thingsCtrl")
 
+                    div(ng-controller="wNetCtrl")
+                        #wNetSet
                     div#thingsSet loading...
 
-                #auth.mdl-layout__tab-panel(ng-controller="authCtrl")
-                    div.row
-                        div#loginMe
+                #auth.mdl-grid.demo-content(ng-controller="authCtrl")
+                    #loginMe
 
 
 
 
-                footer.mdl-mega-footer
-                    .mdl-mega-footer--middle-section
-                        .mdl-mega-footer--drop-down-section
-                            input.mdl-mega-footer--heading-checkbox(type='checkbox', checked='')
-                            h1.mdl-mega-footer--heading Features
-                            ul.mdl-mega-footer--link-list
-                                li
-                                    a(href='#') About
-                                li
-                                    a(href='#') Terms
-                                li
-                                    a(href='#') Partners
-                                li
-                                    a(href='#') Updates
-                        .mdl-mega-footer--drop-down-section
-                            input.mdl-mega-footer--heading-checkbox(type='checkbox', checked='')
-                            h1.mdl-mega-footer--heading Details
-                            ul.mdl-mega-footer--link-list
-                                li
-                                    a(href='#') Spec
-                                li
-                                    a(href='#') Tools
-                                li
-                                    a(href='#') Resources
-                        .mdl-mega-footer--drop-down-section
-                            input.mdl-mega-footer--heading-checkbox(type='checkbox', checked='')
-                            h1.mdl-mega-footer--heading Technology
-                            ul.mdl-mega-footer--link-list
-                                li
-                                    a(href='#') How it works
-                                li
-                                    a(href='#') Patterns
-                                li
-                                    a(href='#') Usage
-                                li
-                                    a(href='#') Products
-                                li
-                                    a(href='#') Contracts
-                        .mdl-mega-footer--drop-down-section
-                            input.mdl-mega-footer--heading-checkbox(type='checkbox', checked='')
-                            h1.mdl-mega-footer--heading FAQ
-                            ul.mdl-mega-footer--link-list
-                                li
-                                    a(href='#') Questions
-                                li
-                                    a(href='#') Answers
-                                li
-                                    a(href='#') Contact us
-                    .mdl-mega-footer--bottom-section
-                        .mdl-logo
-                            | More Information
-                        ul.mdl-mega-footer--link-list
-                            li
-                                a(href='https://developers.google.com/web/starter-kit/') Web Starter Kit
-                            li
-                                a(href='#') Help
-                            li
-                                a(href='#') Privacy and Terms
-        a(ng-controller="voiceCtrl", ng-click="execute()")#view-source.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored.mdl-shadow--4dp.mdl-color--accent
+        a(ng-controller="voiceCtrl", ng-click="execute()")#voice-record.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored.mdl-shadow--4dp.mdl-color--accent
             i.material-icons(role='presentation') micro
             span.visuallyhidden micro
+
         script(src='js/mdl/material.min.js')
 

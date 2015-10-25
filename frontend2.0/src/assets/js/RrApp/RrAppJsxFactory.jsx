@@ -231,7 +231,7 @@ angular.module('JsxFactory', [])
 
             componentDidMount: function () {
 
-                var authDom = document.getElementsByClassName('auth').item();
+                var authDom = document.getElementsByClassName('auth')[0];
                 componentHandler.upgradeElements(authDom.getElementsByClassName('username'));
                 componentHandler.upgradeElements(authDom.getElementsByClassName('password'));
 
@@ -293,37 +293,65 @@ angular.module('JsxFactory', [])
 
     .factory('JsxWnetFactory', function () {
 
+        function pieChart(percentage) {
+
+
+            percentage = 100 - percentage;
+            size = 1;
+            // primary wedge
+            var unit = (Math.PI *2) / 100;
+            var startangle = 0;
+            var endangle = percentage * unit - 0.001;
+            var x2 = (size / 2) + (size / 2) * Math.sin(endangle);
+            var y2 = (size / 2) - (size / 2) * Math.cos(endangle);
+            var big = 0;
+            if (endangle - startangle > Math.PI) {
+                big = 1;
+            }
+
+            return {big: big,x2: x2,y2: y2};
+        }
+
+
         var Wnet = React.createClass({
 
             render: function () {
                 var attention = this.props.data.attention;
+                var drawA = pieChart(attention);
                 var meditation = this.props.data.meditation;
+                var drawM = pieChart(meditation);
+
                 return (
-                    <section className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                        <header
-                            className="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white">
-                            <i className="material-icons">play_circle_filled</i>
-                        </header>
-                        <div
-                            className="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
-                            <div className="mdl-card__supporting-text">
-                                <h4>Status</h4>
-                            </div>
-                            <div
-                                className="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
-                                <div style={{"width":"100%"}} className="attention">
-                                    <p>meditation:&nbsp
-                                        <strong>{attention}%</strong>
-                                    </p>
-                                </div>
-                                <div style={{"width":"100%"}} className="meditation">
-                                    <p>attention:&nbsp
-                                        <strong>{meditation}%</strong>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+
+                        <div className="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid" dangerouslySetInnerHTML={{__html:
+                        `
+                        <svg fill="currentColor" width="200px" height="200px" viewBox="0 0 1 1" class="demo-chart mdl-cell mdl-cell--4-col mdl-cell--6-col-desktop">
+                            <use xlink:href="#piechartM" mask="url(#piemask)" />
+                            <text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">` + attention + `<tspan font-size="0.2" dy="-0.07">%</tspan></text>
+                        </svg>
+                        <svg fill="currentColor" width="200px" height="200px" viewBox="0 0 1 1" class="demo-chart mdl-cell mdl-cell--4-col mdl-cell--6-col-desktop">
+                            <use xlink:href="#piechartA" mask="url(#piemask)" />
+                            <text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">` + meditation+ `<tspan dy="-0.07" font-size="0.2">%</tspan></text>
+                        </svg>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" style="position: fixed; left: -1000px; height: -1000px;">
+                            <defs>
+                              <mask id="piemask" maskContentUnits="objectBoundingBox">
+                                <circle cx=0.5 cy=0.5 r=0.49 fill="white" />
+                                <circle cx=0.5 cy=0.5 r=0.40 fill="black" />
+                              </mask>
+                              <g id="piechartM">
+                                <circle cx=0.5 cy=0.5 r=0.5 />
+                                <path d="M 0.5 0.5 0.5 0 A 0.5 0.5 0 ` + drawA.big +`  1 ` + drawA.x2 + ` ` + drawA.y2 + `z" stroke="none" fill="rgba(255, 255, 255, 0.75)" />
+                              </g>
+
+                              <g id="piechartA">
+                                <circle cx=0.5 cy=0.5 r=0.5 />
+                                <path d="M 0.5 0.5 0.5 0 A 0.5 0.5 0 `  + drawM.big +`  1 ` + drawM.x2 + ` ` + drawM.y2 + `z" stroke="none" fill="rgba(255, 255, 255, 0.75)" />
+                              </g>
+                            </defs>
+                        </svg>
+                        `}} ></div>
                 );
             }
         });

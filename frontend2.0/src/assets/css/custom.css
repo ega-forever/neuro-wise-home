@@ -32,6 +32,9 @@
     left:5px;
 }
 
+#thingsSet{
+    width: 100%;
+}
 
 #thingsSet .mdl-textfield{
     width: 340px;
@@ -39,4 +42,33 @@
 
 #thingsSet .mdl-card__actions{
     text-align: center;
+}
+
+
+.mdl-thing{
+    min-width:320px
+}
+
+#wNetSet{
+    width: 100%;
+}
+
+
+#auth {
+    padding-top: 16px;
+}
+
+
+
+#voice-record {
+    position: fixed;
+    display: block;
+    right: 0;
+    bottom: 0;
+    margin-right: 40px;
+    margin-bottom: 40px;
+    z-index: 900;
+}
+#things section{
+    display:inline-block;
 }
