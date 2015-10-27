@@ -111,18 +111,15 @@ html(lang='en', ng-app="RrApp")
                         i.mdl-color-text--blue-grey-400.material-icons(role='presentation') home
                         | Home
 
+                #p2.mdl-js-progress.mdl-progress__indeterminate
+
             main.mdl-layout__content.mdl-color--grey-100.mdl-demo
-
-
-                //#wNet.mdl-grid.demo-content(ng-controller="wNetCtrl")
-                    #wNetSet
-
 
                 #things.mdl-grid.demo-content(ng-controller="thingsCtrl")
 
                     div(ng-controller="wNetCtrl")
                         #wNetSet
-                    div#thingsSet loading...
+                    div#thingsSet
 
                 #auth.mdl-grid.demo-content(ng-controller="authCtrl")
                     #loginMe
@@ -130,9 +127,10 @@ html(lang='en', ng-app="RrApp")
 
 
 
-        a(ng-controller="voiceCtrl", ng-click="execute()")#voice-record.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored.mdl-shadow--4dp.mdl-color--accent
-            i.material-icons(role='presentation') micro
-            span.visuallyhidden micro
+        div(ng-controller="authCtrl")
+            a(ng-controller="voiceCtrl", ng-click="execute()", ng-show="storage.username")#voice-record.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--colored.mdl-shadow--4dp.mdl-color--accent
+                i.material-icons(role='presentation') micro
+                span.visuallyhidden micro
 
         script(src='js/mdl/material.min.js')
 

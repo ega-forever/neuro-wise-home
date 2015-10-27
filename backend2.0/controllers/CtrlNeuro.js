@@ -1,7 +1,7 @@
 var nodeThinkGear = require('node-thinkgear');
 var io = require('socket.io');
 var CtrlAuth = require('./CtrlAuth');
-
+var neuroConfig = require('../config/NeuroConfig');
 
 var tgClient = nodeThinkGear.createClient({
     appName: 'My Great Application',
@@ -30,7 +30,9 @@ tgClient.on('data', function (data) {
 
 });
 
-//tgClient.connect();
+if(neuroConfig.useNeuroSet){
+    tgClient.connect();
+}
 
 
 var init = function (data) {
@@ -55,10 +57,6 @@ var init = function (data) {
         });
     });
 
-
-
-
-    //tgClient.connect();
 }
 
 

@@ -20,7 +20,7 @@ angular.module('RrAppWNetCtrl', [])
             console.log(payload.data);
 
             if(payload.data.meditation > 70 && payload.data.attention > 70){
-
+                angular.element(document.getElementById('voice-record')).scope().execute();
             }
         });
 

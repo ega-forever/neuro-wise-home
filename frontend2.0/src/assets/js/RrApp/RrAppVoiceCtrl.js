@@ -2,6 +2,7 @@ angular.module('RrAppVoiceCtrl', [])
     .controller('voiceCtrl', function ($scope, $localStorage, restService, voiceStorageService, socketService) {
         var _this = $scope;
 
+        _this.visible = $localStorage.username != null && $localStorage.token != null;
 
         var socket = socketService.getAuthIo();
 
