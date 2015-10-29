@@ -1,11 +1,11 @@
 angular.module('RrAppWNetCtrl', [])
-    .controller('wNetCtrl', function (JsxWnetFactory, $scope, restService, $localStorage) {
+    .controller('wNetCtrl', function (JsxWnetFactory, $scope, restService, $localStorage, socketService) {
         var _this = $scope;
 
         JsxWnetFactory.WNetRender({attention: 0, meditation: 0}, _this);
 
 
-        var neuro =  io.connect('http://localhost:9003/neuro');
+        var neuro =  socketService.getNeuroIo();
         neuro.on('auth', function(){
             neuro.emit('auth', {token: $localStorage.token});
             console.log('in auth');

@@ -1,10 +1,10 @@
 angular.module('RrAppRestService', [])
-    .factory('restService', function ($http, $localStorage) {
+    .factory('restService', function ($http, $localStorage, configService) {
 
         return {
             getThings: function () {
                 {
-                    return $http.get('http://localhost:9000/rest-things', {headers: {'x-access-token' : $localStorage.token}})
+                    return $http.get('http://' + configService.restHost +'/rest-things', {headers: {'x-access-token' : $localStorage.token}})
                         .success(function(data){
                             return data;
                     });
@@ -12,7 +12,8 @@ angular.module('RrAppRestService', [])
             },
             auth: function (username, password) {
                 {
-                    return $http.post('http://localhost:9000/authenticate', {name: username, password: password})
+                    console.log(configService.restHost);
+                    return $http.post('http://'+  configService.restHost +'/authenticate', {name: username, password: password})
                         .success(function (data) {
                             return data;
                         });
@@ -20,7 +21,7 @@ angular.module('RrAppRestService', [])
             },
             updateVoiceCommand: function (voiceCommands, thing) {
                 {
-                    return $http.post('http://localhost:9000/rest-voice',  {headers: {'x-access-token' : $localStorage.token},
+                    return $http.post('http://' + configService.restHost + '/rest-voice',  {headers: {'x-access-token' : $localStorage.token},
                         commands: voiceCommands, thing:thing})
                         .success(function (data) {
                             return data;
@@ -29,7 +30,7 @@ angular.module('RrAppRestService', [])
             },
             executeVoiceCommand: function (voiceCommand, thing) {
                 {
-                    return $http.get('http://localhost:9000/rest-voice?thing=' + thing + "&command=" + voiceCommand ,
+                    return $http.get('http://' + configService.restHost +'/rest-voice?thing=' + thing + "&command=" + voiceCommand ,
                         {headers: {'x-access-token' : $localStorage.token}})
                         .success(function (data) {
                             return data;

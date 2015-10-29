@@ -35,6 +35,7 @@ var config = function (app,  restThings, restAuth, restVoiceCommand, restCommand
 //our options to method converter
     app.options('/rest-things', cors());//todo remove in future
     app.options('/rest-voice', cors());//todo remove in future
+    app.options('/authenticate', cors());//todo remove in future
 
     //app.options('/api/users', cors());//todo remove in future
 
