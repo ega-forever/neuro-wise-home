@@ -78,7 +78,7 @@ html(lang='en', ng-app="RrApp")
 
                         li.mdl-menu__item.mdl-menu_manipulate(href='#auth', ng-controller="authCtrl") {{storage.username || 'Login'}}
 
-                        li.mdl-menu__item.mdl-menu_manipulate(href='#things') Things
+                        li.mdl-menu__item.mdl-menu_manipulate(href='#things', ng-controller="authCtrl", ng-show="storage.username") Things
 
                         li.mdl-menu__item.mdl-menu_manipulate About
 
