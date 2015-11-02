@@ -1,3 +1,3 @@
 module.exports = {
-    useNeuroSet: true
+    useNeuroSet: false
 };

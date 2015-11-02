@@ -31,11 +31,13 @@ var config = function (app,  restThings, restAuth, restVoiceCommand, restCommand
     //app.post('/rest-command', restCommands.set);
 
     app.post('/authenticate', restAuth.auth);
+    app.post('/rest-cauth', restAuth.cauth);
 
 //our options to method converter
     app.options('/rest-things', cors());//todo remove in future
     app.options('/rest-voice', cors());//todo remove in future
     app.options('/authenticate', cors());//todo remove in future
+    app.options('/rest-cauth', cors());//todo remove in future
 
     //app.options('/api/users', cors());//todo remove in future
 

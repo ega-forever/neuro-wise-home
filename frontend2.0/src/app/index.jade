@@ -29,6 +29,7 @@ html(lang='en', ng-app="RrApp")
         link(rel='stylesheet', href='css/mdl/css/material.min.css')
         link(rel='stylesheet', href='css/styles.css')
 
+        script(src='js/mdl/material.min.js')
         script(src='js/react/react.js')
         script(src='js/lodash/lodash.js')
         script(src='js/q/q.js')
@@ -46,6 +47,7 @@ html(lang='en', ng-app="RrApp")
         script(src='js/RrApp/RrAppAuthCtrl.js')
         script(src='js/RrApp/RrAppWNetCtrl.js')
         script(src='js/RrApp/RrAppVoiceCtrl.js')
+        script(src='js/RrApp/RrAppSettingsCtrl.js')
         script(src='js/RrApp/services/RrAppRestService.js')
         script(src='js/RrApp/services/RrAppVoiceStorageService.js')
         script(src='js/RrApp/services/RrAppSocketService.js')
@@ -58,6 +60,7 @@ html(lang='en', ng-app="RrApp")
         .demo-layout.mdl-layout.mdl-js-layout.mdl-layout--fixed-drawer.mdl-layout--fixed-header
             header.demo-header.mdl-layout__header.mdl-color--white.mdl-color--grey-100.mdl-color-text--grey-600
                 .mdl-layout__header-row
+
                     span.mdl-layout-title Home
 
                     .mdl-layout-spacer
@@ -81,6 +84,8 @@ html(lang='en', ng-app="RrApp")
                         li.mdl-menu__item.mdl-menu_manipulate(href='#things', ng-controller="authCtrl", ng-show="storage.username") Things
 
                         li.mdl-menu__item.mdl-menu_manipulate About
+
+                    #progressBar.mdl-progress.mdl-js-progress.mdl-progress__indeterminate
 
 
 
@@ -112,10 +117,16 @@ html(lang='en', ng-app="RrApp")
                         i.mdl-color-text--blue-grey-400.material-icons(role='presentation') home
                         | Home
 
-                #p2.mdl-js-progress.mdl-progress__indeterminate
+                    a.mdl-navigation__link.mdl-menu_manipulate(href='#settings')
+                        i.mdl-color-text--blue-grey-400.material-icons(role='presentation') settings
+                        | Settings
+
+
 
             main.mdl-layout__content.mdl-color--grey-100.mdl-demo
 
+                #settings.mdl-grid.demo-content(ng-controller="settingsCtrl")
+                    #settingsSet
                 #things.mdl-grid.demo-content(ng-controller="thingsCtrl")
 
                     div(ng-controller="wNetCtrl")
@@ -133,5 +144,5 @@ html(lang='en', ng-app="RrApp")
                 i.material-icons(role='presentation') micro
                 span.visuallyhidden micro
 
-        script(src='js/mdl/material.min.js')
+
 

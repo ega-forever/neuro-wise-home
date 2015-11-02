@@ -36,7 +36,19 @@ angular.module('RrAppRestService', [])
                             return data;
                         });
                 }
+            },
+
+            updateAuth: function (uname, pass) {
+                {
+                    return $http.post('http://' + configService.restHost +'/rest-cauth',  {headers: {'x-access-token' : $localStorage.token},
+                        uname: uname, pass:pass})
+                        .success(function (data) {
+                            return data;
+                        });
+                }
             }
+
+
         };
 
     })

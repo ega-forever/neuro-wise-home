@@ -59,6 +59,11 @@
 }
 
 
+#settings {
+    padding-top: 16px;
+}
+
+
 
 #voice-record {
     position: fixed;
@@ -72,3 +77,4 @@
 #things section{
     display:inline-block;
 }
+

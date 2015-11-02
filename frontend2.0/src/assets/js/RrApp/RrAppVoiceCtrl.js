@@ -14,6 +14,7 @@ angular.module('RrAppVoiceCtrl', [])
             }
         }];
 
+        var progressBar = document.querySelector("#progressBar");
 
         _this.execute = function () {
 
@@ -21,6 +22,7 @@ angular.module('RrAppVoiceCtrl', [])
             wordList = [];
             grammars[0].g.transitions = [];
 
+            progressBar.style.display = "block";
             voiceStorageService.getThings().forEach(function (item) {
 
                 things.push(item);
@@ -31,7 +33,8 @@ angular.module('RrAppVoiceCtrl', [])
                 grammars[0].g.transitions.push({from: 0, to: 0, word: item.name.toUpperCase()});
             });
 
-            voiceStorageService.getVoiceApi().init(wordList, grammars).then(function (d) {
+
+            voiceStorageService.getVoiceApi().init(wordList, grammars, progressBar).then(function (d) {
                 console.log('d: ' + d);
                 var recognition = new webkitSpeechRecognition();
                 recognition.lang = "en";
@@ -39,7 +42,7 @@ angular.module('RrAppVoiceCtrl', [])
                 recognition.onresult = function (event) {
                     console.log(event.results[0][0].transcript);
 
-                    restService.executeVoiceCommand(event.results[0][0].transcript, d.toLowerCase()).then(function (d) {//make interface and pass to thingCtrl
+                    restService.executeVoiceCommand(event.results[0][0].transcript, d.toLowerCase()).then(function (d) {
                         console.log(d.data);
 
                         var thing = _.chain(things).find({name: d.data.thing.toLowerCase()}).value();

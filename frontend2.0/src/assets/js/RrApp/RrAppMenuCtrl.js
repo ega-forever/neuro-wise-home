@@ -1,9 +1,10 @@
 angular.module('RrAppMenuCtrl', [])
     .controller('menuCtrl', function ($localStorage, $scope) {
 
+        _.chain(document.getElementsByClassName('demo-content')).forEach(i => i.style.display = "none").value();
+
 
         _.chain(document.getElementsByClassName('mdl-menu_manipulate')).forEach(function (i) {
-            _.chain(document.getElementsByClassName('demo-content')).forEach(i => i.style.display = "none").value();
 
 
             i.onclick = function () {
@@ -14,6 +15,7 @@ angular.module('RrAppMenuCtrl', [])
                 document.getElementById(i.getAttribute('href'));
             }
         }).value()
+
 
 
         if ($localStorage.token != null && $localStorage.username != null) {

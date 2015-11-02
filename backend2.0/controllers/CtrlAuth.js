@@ -44,6 +44,21 @@ var auth = function (req) {
 }
 
 
+var changeAuth = function (user, newName, newPass) {
+console.log('inside');
+    var deferred = q.defer();
+    user.name = newName;
+    user.password = newPass;
+    user.save(function (e) {
+        if (e) {
+            deferred.resolve(null);
+        }
+        console.log('saved...');
+        deferred.resolve('ok');
+    });
+
+}
+
 var isAuth = function (token) {
 
     if (token == null) {
@@ -106,6 +121,7 @@ var socketAuth = function (io) {
 }
 
 module.exports.userAuthCtrl = auth;
+module.exports.userCAuthCtrl = changeAuth;
 module.exports.userAuthCtrlCheker = isAuth;
 module.exports.socketAuth = socketAuth;
 module.exports.getIdByToken = getIdByToken;

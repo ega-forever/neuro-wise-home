@@ -372,4 +372,71 @@ angular.module('JsxFactory', [])
         return {
             WNetRender: WNetRender
         }
+    })
+
+.factory('JsxSettingsFactory', function () {
+
+
+    var Settings = React.createClass({
+
+        change: function (ev) {
+            this.props.scope.change(this.props.name, this.props.pass);
+        },
+
+        setUserName(ev){
+            this.props.name = ev.target.value;
+        },
+
+        setPassword(ev){
+            this.props.pass = ev.target.value;
+        },
+
+
+        componentDidMount: function () {
+
+            var authDom = document.getElementsByClassName('newAuth')[0];
+            componentHandler.upgradeElements(authDom.getElementsByClassName('username'));
+            componentHandler.upgradeElements(authDom.getElementsByClassName('password'));
+
+        },
+
+
+        render: function () {
+
+            return (
+                <section className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp square-card">
+                    <div className="mdl-card mdl-cell mdl-cell--12-col newAuth">
+                        <div className="mdl-card__supporting-text"><h4>Change</h4> your username and pass</div>
+                        <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label username">
+                            <input className="mdl-textfield__input" type="text" onChange={this.setUserName}/>
+                            <label className="mdl-textfield__label" username="username">{this.props.data.name}</label>
+                        </div>
+                        <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label password">
+                            <input className="mdl-textfield__input" type="text" onChange={this.setPassword}/>
+                            <label className="mdl-textfield__label" htmlFor="password">******</label>
+                        </div>
+                        <div className="mdl-card__actions"><a href="#" className="mdl-button" onClick={this.change}>Change it!</a>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
     });
+
+    var SettingsRender = function (data, scope) {
+
+        if (scope == null || scope == undefined) {
+            return;
+        }
+
+        return React.render(
+            <Settings data={data} scope={scope}/>,
+            document.getElementById('settingsSet')
+        )
+    };
+
+
+    return {
+        SettingsRender: SettingsRender
+    }
+})

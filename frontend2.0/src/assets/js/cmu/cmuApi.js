@@ -36,7 +36,7 @@ function cmuApi() {
         }
     };
 
-    var initVoice = function (wordList, grammars) {
+    var initVoice = function (wordList, grammars, progressBar) {
         var deferred = Q.defer();
 
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -50,7 +50,6 @@ function cmuApi() {
 
 
                 var input = audioContext.createMediaStreamSource(stream);
-                // Firefox hack https://support.mozilla.org/en-US/questions/984179
                 window.firefox_audio_hack = input;
                 var audioRecorderConfig = {
                     errorCallback: function (x) {
@@ -59,9 +58,9 @@ function cmuApi() {
 
                 recorder = new AudioRecorder(input, audioRecorderConfig);
 
-                console.log('!!!');
                 callbackManager = new CallbackManager();
                 spawnWorker("js/cmu/recognizer.js", function (worker) {
+                    progressBar.style.display = "none";
                     worker.onmessage = function (e) {
                         console.log(e.data);
                         if (e.data.hasOwnProperty('id')) {
