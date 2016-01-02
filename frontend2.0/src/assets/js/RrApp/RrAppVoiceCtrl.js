@@ -16,12 +16,18 @@ angular.module('RrAppVoiceCtrl', [])
 
         var progressBar = document.querySelector("#progressBar");
 
+        var isInTurn = false;
+
         _this.execute = function () {
 
+            if(isInTurn){
+                return;
+            }
             var things = [];
             wordList = [];
             grammars[0].g.transitions = [];
 
+            isInTurn = true;
             progressBar.style.display = "block";
             voiceStorageService.getThings().forEach(function (item) {
 
@@ -53,6 +59,7 @@ angular.module('RrAppVoiceCtrl', [])
                         thing.socketObj.io.emit(d.data.trigger);
 
                     });
+                    isInTurn = false;
                 }
 
                 recognition.start();

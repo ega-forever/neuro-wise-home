@@ -14,8 +14,14 @@ angular.module('RrAppMenuCtrl', [])
                 document.getElementById(i.getAttribute('href').replace("#", "")).style.display = "block";
                 document.getElementById(i.getAttribute('href'));
             }
-        }).value()
+        }).value();
 
+
+        _.chain(document.querySelectorAll('nav a')).forEach(function(d){
+          d.addEventListener('click', function() {
+              document.querySelector('.demo-header .mdl-layout__drawer-button').click();
+          });
+        }).value();
 
 
         if ($localStorage.token != null && $localStorage.username != null) {

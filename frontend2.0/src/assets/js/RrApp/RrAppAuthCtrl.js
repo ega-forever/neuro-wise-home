@@ -5,6 +5,9 @@ angular.module('RrAppAuthCtrl', [])
         _this.storage = $localStorage;
         _this.login = function (username, password) {
             restService.auth(username, password).then(function (d) {
+                if(!d.data.success){
+                   return JsxAuthFactory.LoginRender({text: d.data.message}, _this);
+                }
                 $localStorage.token = d.data.token;
                 $localStorage.username = d.data.username;
                 JsxAuthFactory.LogoutRender(d.data, _this);

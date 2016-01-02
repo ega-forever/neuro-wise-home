@@ -1,5 +1,5 @@
 var Q = require('q');
-var neuronApi = require('../data/NeuronApi/NeuronApi');
+var neuronApi = require('../data/NeuronApi/NeuronApiS');
 var ctrlThings = require('./CtrlThings');
 var executeVoiceCommand = function (user, thing,  command) {
 

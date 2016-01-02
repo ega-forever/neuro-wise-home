@@ -235,6 +235,9 @@ angular.module('JsxFactory', [])
                 componentHandler.upgradeElements(authDom.getElementsByClassName('username'));
                 componentHandler.upgradeElements(authDom.getElementsByClassName('password'));
 
+                this.setUserName({target: {value: ""}});
+                this.setPassword({target: {value: ""}});
+
             },
 
 
@@ -243,7 +246,7 @@ angular.module('JsxFactory', [])
                 return (
                     <section className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp square-card">
                         <div className="mdl-card mdl-cell mdl-cell--12-col auth">
-                            <div className="mdl-card__supporting-text"><h4>Login</h4> with your username and pass</div>
+                            <div className="mdl-card__supporting-text"><h4>Login</h4><span className="not-valid">{this.props.data.text}</span></div>
                             <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label username">
                                 <input className="mdl-textfield__input" type="text" onChange={this.setUserName}/>
                                 <label className="mdl-textfield__label" username="username">Username...</label>
@@ -379,34 +382,36 @@ angular.module('JsxFactory', [])
 
     var Settings = React.createClass({
 
+        getInitialState: function() {
+            return {name: "", pass: ""};
+        },
+
         change: function (ev) {
-            this.props.scope.change(this.props.name, this.props.pass);
+            this.props.scope.change(this.state.name, this.state.pass);
         },
 
         setUserName(ev){
-            this.props.name = ev.target.value;
+            this.state.name = ev.target.value;
         },
 
         setPassword(ev){
-            this.props.pass = ev.target.value;
+            this.state.pass = ev.target.value;
         },
 
 
         componentDidMount: function () {
 
-            var authDom = document.getElementsByClassName('newAuth')[0];
-            componentHandler.upgradeElements(authDom.getElementsByClassName('username'));
-            componentHandler.upgradeElements(authDom.getElementsByClassName('password'));
-
+            var authDom = document.querySelector('.newAuth');
+            componentHandler.upgradeElement(authDom.querySelector('.username'));
+            componentHandler.upgradeElement(authDom.querySelector('.password'));
         },
 
 
         render: function () {
-
             return (
-                <section className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp square-card">
-                    <div className="mdl-card mdl-cell mdl-cell--12-col newAuth">
-                        <div className="mdl-card__supporting-text"><h4>Change</h4> your username and pass</div>
+                <section className="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp square-card newAuth">
+                    <div className="mdl-card mdl-cell mdl-cell--12-col">
+                        <div className="mdl-card__supporting-text"><h4>Modify Accaunt</h4><span className="not-valid">{this.props.data.text}</span></div>
                         <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label username">
                             <input className="mdl-textfield__input" type="text" onChange={this.setUserName}/>
                             <label className="mdl-textfield__label" username="username">{this.props.data.name}</label>

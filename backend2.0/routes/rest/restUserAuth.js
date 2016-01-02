@@ -12,10 +12,19 @@ exports.cauth = function (req, res) {
 
         if (user != null && user.id != null && req.body.uname.length > 3 && req.body.pass.length > 3) {
             authCtrl.userCAuthCtrl(user, req.body.uname, req.body.pass).then(function (a) {
-                res.send(a);
+                res.send({success: true});
             });
         } else {
-            res.send([]);
+            if(req.body.uname.length < 4){
+             return res.send({success: false, message: 'too short username'});
+            }
+
+            if(req.body.pass.length < 4){
+                return res.send({success: false, message: 'too short password'});
+            }
+
+            return res.send();
+
         }
 
 

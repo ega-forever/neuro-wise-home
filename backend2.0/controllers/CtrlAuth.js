@@ -56,7 +56,7 @@ console.log('inside');
         console.log('saved...');
         deferred.resolve('ok');
     });
-
+return deferred.promise;
 }
 
 var isAuth = function (token) {

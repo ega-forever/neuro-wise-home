@@ -78,3 +78,11 @@
     display:inline-block;
 }
 
+.not-valid {
+    color:rgb(244, 67, 54);
+}
+
+
+.hidden {
+    display: none;
+}
