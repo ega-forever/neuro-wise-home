@@ -28,6 +28,10 @@ angular.module('RrAppVoiceCtrl', [])
             grammars[0].g.transitions = [];
 
             isInTurn = true;
+
+            var timer = setTimeout(function(){
+                isInTurn = false;
+            }, 5000);
             progressBar.style.display = "block";
             voiceStorageService.getThings().forEach(function (item) {
 
@@ -60,6 +64,7 @@ angular.module('RrAppVoiceCtrl', [])
 
                     });
                     isInTurn = false;
+                    clearTimeout(timer);
                 }
 
                 recognition.start();
